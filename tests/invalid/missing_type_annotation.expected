@@ -1,1 +1,1 @@
-compilation error: line 2:8: expected OP_TYPE_ANN, got OP_ASSIGN ('🎯')
+compilation error: line 2:5: expected OP_TYPE_ANN, got OP_ASSIGN ('🎯')

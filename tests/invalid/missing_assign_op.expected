@@ -1,1 +1,1 @@
-compilation error: line 2:20: expected OP_ASSIGN, got INT_LITERAL ('42')
+compilation error: line 2:11: expected OP_ASSIGN, got INT_LITERAL ('42')
