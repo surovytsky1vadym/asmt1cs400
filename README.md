@@ -210,7 +210,7 @@ The test runner:
 - Overflow checks
 - Complex multi-feature programs
 
-**18 invalid tests** covering:
+**21 invalid tests** covering:
 - Missing statement terminator
 - Missing type annotation
 - Missing assignment operator

@@ -6,6 +6,11 @@
 (* ── Program structure ──────────────────────────────────────────────────── *)
 program        = { statement } ;
 
+(* ── Comments (handled by the lexer, skipped before tokenising) ─────────── *)
+(* A single-line comment starts with "//" and extends to the end of the line.
+   Comments are not tokens and do not appear in the AST.                     *)
+comment        = "//" , { any_char_except_newline } , newline ;
+
 (* ── Statements ─────────────────────────────────────────────────────────── *)
 statement      = varDecl
                | constDecl
@@ -88,7 +93,7 @@ primary        = intLiteral
                | "(" , expr , ")" ;
 
 (* ── Literals ───────────────────────────────────────────────────────────── *)
-intLiteral     = [ "-" ] , digit , { digit } ;
+intLiteral     = digit , { digit } ;
 digit          = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
 boolLiteral    = "🏆" | "💀" ;                           (* true , false     *)
