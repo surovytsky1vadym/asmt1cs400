@@ -1,0 +1,31 @@
+Program
+  VarDecl(name=score, type=i32, mutable=True)
+    value:
+      IntLiteral(75)
+  VarDecl(name=grade, type=i32, mutable=True)
+    value:
+      IntLiteral(0)
+  If
+    condition:
+      BinaryOp(op=GTE)
+        left:
+          Identifier(score)
+        right:
+          IntLiteral(50)
+    then:
+      Assign(name=grade)
+        value:
+          IntLiteral(1)
+      Print
+        expr:
+          Identifier(grade)
+      Print
+        expr:
+          Identifier(score)
+    else:
+      Assign(name=grade)
+        value:
+          IntLiteral(0)
+      Print
+        expr:
+          Identifier(grade)
