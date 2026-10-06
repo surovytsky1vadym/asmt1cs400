@@ -155,20 +155,47 @@ class Lexer:
 
     # ── internal scanning ───────────────────────────────────────────────
 
+    @staticmethod
+    def _utf8_seq_len(lead: int) -> int:
+        """Return the number of bytes in a UTF-8 sequence from its leading byte."""
+        if lead < 0x80:
+            return 1
+        if lead < 0xC0:          # continuation byte (shouldn't be a lead)
+            return 1
+        if lead < 0xE0:
+            return 2
+        if lead < 0xF0:
+            return 3
+        return 4
+
     def _peek_byte(self) -> int | None:
         if self._pos < len(self._data):
             return self._data[self._pos]
         return None
 
     def _advance(self) -> int:
+        """Advance one byte.  Column is incremented only for ASCII bytes and
+        for UTF-8 *leading* bytes (not continuation bytes 10xxxxxx), so that
+        the column number reflects visible characters, not raw bytes."""
         b = self._data[self._pos]
         self._pos += 1
         if b == ord("\n"):
             self._line += 1
             self._col = 1
-        else:
+        elif b < 0x80 or b >= 0xC0:
+            # ASCII byte or UTF-8 leading byte → new visible character
             self._col += 1
+        # else: continuation byte (10xxxxxx) → same visible character
         return b
+
+    def _advance_codepoint(self) -> str:
+        """Advance a full UTF-8 codepoint (1-4 bytes) and return it as a str."""
+        lead = self._data[self._pos]
+        length = self._utf8_seq_len(lead)
+        raw = self._data[self._pos:self._pos + length]
+        for _ in range(length):
+            self._advance()
+        return raw.decode("utf-8", errors="replace")
 
     def _skip_whitespace_and_comments(self):
         while self._pos < len(self._data):
@@ -223,9 +250,10 @@ class Lexer:
         if self._is_ident_start(b):
             return self._scan_identifier(start_line, start_col)
 
-        # ── Unknown byte → error ────────────────────────────────────────
-        ch = chr(b) if b < 128 else self._data[self._pos:self._pos+4].decode("utf-8", errors="replace")
-        self._advance()
+        # ── Unknown character → error ───────────────────────────────────
+        # Consume the full codepoint (1-4 bytes) to avoid cascading errors
+        # from orphan continuation bytes.
+        ch = self._advance_codepoint()
         return Token(TokenKind.ERROR, f"unexpected character '{ch}'", start_line, start_col)
 
     def _scan_integer(self, line: int, col: int) -> Token:
