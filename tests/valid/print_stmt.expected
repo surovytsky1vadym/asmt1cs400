@@ -1,0 +1,10 @@
+Program
+  VarDecl(name=msg, type=i32, mutable=True)
+    value:
+      IntLiteral(42)
+  Print
+    expr:
+      Identifier(msg)
+  Print
+    expr:
+      IntLiteral(100)

@@ -1,0 +1,3 @@
+// Test: division and modulo operators
+🎮 a 🔫 💎32 🎯 10 ➗ 3 ⚔️
+🎮 b 🔫 💎32 🎯 10 🎲 3 ⚔️

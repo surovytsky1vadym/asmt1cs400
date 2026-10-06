@@ -1,0 +1,15 @@
+Program
+  VarDecl(name=score, type=i32, mutable=True)
+    value:
+      IntLiteral(100)
+  If
+    condition:
+      BinaryOp(op=EQ)
+        left:
+          Identifier(score)
+        right:
+          IntLiteral(100)
+    then:
+      Print
+        expr:
+          Identifier(score)

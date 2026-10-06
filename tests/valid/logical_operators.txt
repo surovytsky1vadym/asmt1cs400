@@ -1,0 +1,5 @@
+// Test: logical operators AND, OR, NOT
+🎮 alive 🔫 🛡️ 🎯 🏆 ⚔️
+🎮 has_shield 🔫 🛡️ 🎯 💀 ⚔️
+🎮 can_fight 🔫 🛡️ 🎯 alive 🤝 🚫 has_shield ⚔️
+🎮 can_rest 🔫 🛡️ 🎯 alive 👾 has_shield ⚔️

@@ -1,0 +1,4 @@
+Program
+  VarDecl(name=x, type=i32, mutable=True)
+    value:
+      IntLiteral(42)

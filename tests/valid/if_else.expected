@@ -1,0 +1,19 @@
+Program
+  VarDecl(name=hp, type=i32, mutable=True)
+    value:
+      IntLiteral(0)
+  If
+    condition:
+      BinaryOp(op=GT)
+        left:
+          Identifier(hp)
+        right:
+          IntLiteral(0)
+    then:
+      Print
+        expr:
+          Identifier(hp)
+    else:
+      Print
+        expr:
+          IntLiteral(0)

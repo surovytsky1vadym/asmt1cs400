@@ -1,0 +1,117 @@
+(* ═══════════════════════════════════════════════════════════════════════════ *)
+(*  KaguLang — a gaming-themed emoji programming language                    *)
+(*  EBNF Grammar (ISO 14977 style)                                          *)
+(* ═══════════════════════════════════════════════════════════════════════════ *)
+
+(* ── Program structure ──────────────────────────────────────────────────── *)
+program        = { statement } ;
+
+(* ── Statements ─────────────────────────────────────────────────────────── *)
+statement      = varDecl
+               | constDecl
+               | assignment
+               | ifStmt
+               | printStmt
+               | overflowCheck ;
+
+(* Variable declaration: 🎮 x 🔫 💎32 🎯 42 ⚔️
+   - 🎮  keyword "spawn" (declare mutable variable)
+   - x   identifier
+   - 🔫  type annotation operator (reads "is-a")
+   - 💎32 / 💎64 / 🛡️  type name
+   - 🎯  assignment operator
+   - expr value
+   - ⚔️  statement terminator                                               *)
+varDecl        = "🎮" , identifier , "🔫" , typeName , "🎯" , expr , "⚔️" ;
+
+(* Constant declaration: 🏰 MAX 🔫 💎32 🎯 100 ⚔️
+   - 🏰  keyword "forge" (declare constant / immutable variable)            *)
+constDecl      = "🏰" , identifier , "🔫" , typeName , "🎯" , expr , "⚔️" ;
+
+(* Assignment: x 🎯 expr ⚔️                                                *)
+assignment     = identifier , "🎯" , expr , "⚔️" ;
+
+(* If / else:
+   🐉 boolExpr 🏟️ stmt+ 🏟️ [ 👻 🏟️ stmt+ 🏟️ ]
+   - 🐉  keyword "quest" (if)
+   - 🏟️  block delimiters (arena open / close)
+   - 👻  keyword "haunt" (else)                                             *)
+ifStmt         = "🐉" , expr , "🏟️" , stmtBlock , "🏟️"
+               , [ "👻" , "🏟️" , stmtBlock , "🏟️" ] ;
+
+stmtBlock      = statement , { statement } ;
+
+(* Print statement: 📢 expr ⚔️
+   - 📢  keyword "shout" (print)                                            *)
+printStmt      = "📢" , expr , "⚔️" ;
+
+(* Overflow check: 💥 expr 🔫 typeName ⚔️
+   - 💥  keyword "clash" (overflow check)                                   *)
+overflowCheck  = "💥" , expr , "🔫" , typeName , "⚔️" ;
+
+(* ── Types ──────────────────────────────────────────────────────────────── *)
+(* 💎32  — 32-bit signed integer (i32, range −2 147 483 648 … 2 147 483 647)
+   💎64  — 64-bit signed integer (i64)
+   🛡️   — boolean                                                          *)
+typeName       = "💎32" | "💎64" | "🛡️" ;
+
+(* ── Expressions ────────────────────────────────────────────────────────── *)
+expr           = orExpr ;
+
+orExpr         = andExpr , { "👾" , andExpr } ;          (* 👾  = logical OR  *)
+
+andExpr        = eqExpr  , { "🤝" , eqExpr } ;          (* 🤝  = logical AND *)
+
+eqExpr         = relExpr , [ eqOp , relExpr ] ;
+
+eqOp           = "⚖️" | "💢" ;                           (* ⚖️ == ,  💢 !=   *)
+
+relExpr        = addExpr , [ relOp , addExpr ] ;
+
+relOp          = "⬆️" | "⬇️" | "⬆️⚖️" | "⬇️⚖️" ;       (* > , < , >= , <=  *)
+
+addExpr        = mulExpr , { addOp , mulExpr } ;
+
+addOp          = "➕" | "➖" ;                             (* + , −            *)
+
+mulExpr        = unaryExpr , { mulOp , unaryExpr } ;
+
+mulOp          = "✖️" | "➗" | "🎲" ;                     (* * , / , %        *)
+
+unaryExpr      = [ unaryOp ] , primary ;
+
+unaryOp        = "➖" | "🚫" ;                            (* negation, NOT    *)
+
+primary        = intLiteral
+               | boolLiteral
+               | identifier
+               | "(" , expr , ")" ;
+
+(* ── Literals ───────────────────────────────────────────────────────────── *)
+intLiteral     = [ "-" ] , digit , { digit } ;
+digit          = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+boolLiteral    = "🏆" | "💀" ;                           (* true , false     *)
+
+(* ── Identifier ─────────────────────────────────────────────────────────── *)
+identifier     = letter , { letter | digit | "_" } ;
+letter         = "a" | "b" | ... | "z" | "A" | "B" | ... | "Z" | "_" ;
+
+(* ═══════════════════════════════════════════════════════════════════════════ *)
+(*  Emoji quick-reference                                                    *)
+(*  🎮  spawn (mutable var)      🏰  forge (constant / immutable var)       *)
+(*  🔫  type annotation          🎯  assignment                             *)
+(*  ⚔️  statement terminator     🐉  quest (if)                             *)
+(*  👻  haunt (else)             🏟️  arena (block delimiter)               *)
+(*  📢  shout (print)            💥  clash (overflow check)                 *)
+(*  💎32 i32 type                💎64 i64 type                              *)
+(*  🛡️  bool type               🏆  victory (true)                         *)
+(*  💀  defeat (false)           ⚖️  equals                                 *)
+(*  💢  not-equals               ⬆️  greater-than                           *)
+(*  ⬇️  less-than                ⬆️⚖️ greater-or-equal                      *)
+(*  ⬇️⚖️ less-or-equal           ➕  plus                                   *)
+(*  ➖  minus / negate           ✖️  multiply                               *)
+(*  ➗  divide                   🎲  modulo                                 *)
+(*  👾  logical OR               🤝  logical AND                            *)
+(*  🚫  logical NOT                                                         *)
+(* ═══════════════════════════════════════════════════════════════════════════ *)

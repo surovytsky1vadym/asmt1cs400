@@ -1,0 +1,4 @@
+// Test: print statement
+🎮 msg 🔫 💎32 🎯 42 ⚔️
+📢 msg ⚔️
+📢 100 ⚔️

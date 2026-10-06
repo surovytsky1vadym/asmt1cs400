@@ -1,0 +1,4 @@
+Program
+  VarDecl(name=flag, type=bool, mutable=True)
+    value:
+      BoolLiteral(True)

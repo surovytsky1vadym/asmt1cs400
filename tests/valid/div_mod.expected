@@ -1,0 +1,15 @@
+Program
+  VarDecl(name=a, type=i32, mutable=True)
+    value:
+      BinaryOp(op=DIV)
+        left:
+          IntLiteral(10)
+        right:
+          IntLiteral(3)
+  VarDecl(name=b, type=i32, mutable=True)
+    value:
+      BinaryOp(op=MOD)
+        left:
+          IntLiteral(10)
+        right:
+          IntLiteral(3)

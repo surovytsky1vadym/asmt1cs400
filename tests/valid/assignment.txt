@@ -1,0 +1,3 @@
+// Test: assignment to mutable variable
+🎮 hp 🔫 💎32 🎯 100 ⚔️
+hp 🎯 50 ⚔️

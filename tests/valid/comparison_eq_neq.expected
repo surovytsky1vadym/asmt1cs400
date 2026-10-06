@@ -1,0 +1,18 @@
+Program
+  VarDecl(name=a, type=i32, mutable=True)
+    value:
+      IntLiteral(10)
+  VarDecl(name=eq, type=bool, mutable=True)
+    value:
+      BinaryOp(op=EQ)
+        left:
+          Identifier(a)
+        right:
+          IntLiteral(10)
+  VarDecl(name=neq, type=bool, mutable=True)
+    value:
+      BinaryOp(op=NEQ)
+        left:
+          Identifier(a)
+        right:
+          IntLiteral(5)

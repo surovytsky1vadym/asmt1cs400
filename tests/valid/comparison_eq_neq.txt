@@ -1,0 +1,4 @@
+// Test: comparison operators == and !=
+🎮 a 🔫 💎32 🎯 10 ⚔️
+🎮 eq 🔫 🛡️ 🎯 a ⚖️ 10 ⚔️
+🎮 neq 🔫 🛡️ 🎯 a 💢 5 ⚔️

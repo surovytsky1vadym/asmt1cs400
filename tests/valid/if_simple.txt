@@ -1,0 +1,5 @@
+// Test: simple if statement
+🎮 score 🔫 💎32 🎯 100 ⚔️
+🐉 score ⚖️ 100 🏟️
+  📢 score ⚔️
+🏟️

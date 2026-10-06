@@ -1,0 +1,3 @@
+// Test: unary negation
+🎮 x 🔫 💎32 🎯 ➖ 42 ⚔️
+🎮 y 🔫 💎32 🎯 ➖ x ⚔️
