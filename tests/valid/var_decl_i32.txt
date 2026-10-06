@@ -1,0 +1,2 @@
+// Test: mutable i32 variable declaration
+🎮 x 🔫 💎32 🎯 42 ⚔️

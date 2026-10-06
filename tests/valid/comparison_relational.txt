@@ -1,0 +1,6 @@
+// Test: relational operators >, <, >=, <=
+🎮 a 🔫 💎32 🎯 10 ⚔️
+🎮 gt 🔫 🛡️ 🎯 a ⬆️ 5 ⚔️
+🎮 lt 🔫 🛡️ 🎯 a ⬇️ 20 ⚔️
+🎮 gte 🔫 🛡️ 🎯 a ⬆️⚖️ 10 ⚔️
+🎮 lte 🔫 🛡️ 🎯 a ⬇️⚖️ 15 ⚔️

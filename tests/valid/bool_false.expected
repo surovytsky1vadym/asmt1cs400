@@ -1,0 +1,4 @@
+Program
+  VarDecl(name=dead, type=bool, mutable=True)
+    value:
+      BoolLiteral(False)

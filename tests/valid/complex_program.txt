@@ -1,0 +1,15 @@
+// Test: complex program with multiple features
+🏰 MAX_SCORE 🔫 💎32 🎯 1000 ⚔️
+🎮 player_score 🔫 💎32 🎯 0 ⚔️
+🎮 bonus 🔫 💎32 🎯 50 ⚔️
+
+player_score 🎯 player_score ➕ bonus ✖️ 2 ⚔️
+
+🐉 player_score ⬆️⚖️ MAX_SCORE 🏟️
+  player_score 🎯 MAX_SCORE ⚔️
+  📢 player_score ⚔️
+🏟️ 👻 🏟️
+  📢 player_score ⚔️
+🏟️
+
+💥 player_score 🔫 💎32 ⚔️

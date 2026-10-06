@@ -1,0 +1,12 @@
+Program
+  VarDecl(name=result, type=i32, mutable=True)
+    value:
+      BinaryOp(op=MUL)
+        left:
+          BinaryOp(op=PLUS)
+            left:
+              IntLiteral(10)
+            right:
+              IntLiteral(20)
+        right:
+          IntLiteral(3)

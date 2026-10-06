@@ -1,0 +1,11 @@
+// Test: if-else with multiple statements in each block
+🎮 score 🔫 💎32 🎯 75 ⚔️
+🎮 grade 🔫 💎32 🎯 0 ⚔️
+🐉 score ⬆️⚖️ 50 🏟️
+  grade 🎯 1 ⚔️
+  📢 grade ⚔️
+  📢 score ⚔️
+🏟️ 👻 🏟️
+  grade 🎯 0 ⚔️
+  📢 grade ⚔️
+🏟️

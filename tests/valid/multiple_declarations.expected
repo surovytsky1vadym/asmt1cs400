@@ -1,0 +1,20 @@
+Program
+  VarDecl(name=a, type=i32, mutable=True)
+    value:
+      IntLiteral(1)
+  VarDecl(name=b, type=i32, mutable=True)
+    value:
+      IntLiteral(2)
+  VarDecl(name=c, type=i32, mutable=True)
+    value:
+      BinaryOp(op=PLUS)
+        left:
+          Identifier(a)
+        right:
+          Identifier(b)
+  ConstDecl(name=d, type=i64, mutable=False)
+    value:
+      IntLiteral(999)
+  VarDecl(name=e, type=bool, mutable=True)
+    value:
+      BoolLiteral(True)
