@@ -1,0 +1,4 @@
+// Function declared inside an if block
+🐉 🏆 🏟️
+  🪄 f() ➡️ 💎32 🏟️ 🏁 1 ⚔️ 🏟️
+🏟️

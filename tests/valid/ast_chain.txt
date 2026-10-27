@@ -1,0 +1,13 @@
+// Test: chained field access, assignment through a chain, member call in a chain
+📦 Point 🏟️
+  🎮 x 🔫 💎32 ⚔️
+🏟️
+📦 Circle 🏟️
+  🎮 center 🔫 Point ⚔️
+  🏰 r 🔫 💎32 ⚔️
+  🪄 origin() ➡️ Point 🏟️
+    🏁 center ⚔️
+  🏟️
+🏟️
+🎮 c 🔫 Circle 🎯 🆕 Circle(🆕 Point(1), 5) ⚔️
+c.center.x 🎯 c.origin().x ➕ 1 ⚔️

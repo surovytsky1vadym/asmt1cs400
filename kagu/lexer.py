@@ -14,6 +14,7 @@ from .errors import CompileError
 class TokenKind(Enum):
     # ── Literals & identifiers ──
     INT_LITERAL  = auto()
+    STRING_LITERAL = auto()
     IDENTIFIER   = auto()
 
     # ── Keywords ──
@@ -25,6 +26,11 @@ class TokenKind(Enum):
     KW_CLASH     = auto()   # 💥  overflow check
     KW_VICTORY   = auto()   # 🏆  true
     KW_DEFEAT    = auto()   # 💀  false
+    KW_SPELL     = auto()   # 🪄  function / member function
+    KW_FINISH    = auto()   # 🏁  return
+    KW_CRATE     = auto()   # 📦  structure
+    KW_NEW       = auto()   # 🆕  object construction
+    KW_READ      = auto()   # 📥  read an integer
 
     # ── Types ──
     TYPE_I32     = auto()   # 💎32
@@ -48,12 +54,15 @@ class TokenKind(Enum):
     OP_OR        = auto()   # 👾
     OP_AND       = auto()   # 🤝
     OP_NOT       = auto()   # 🚫
+    OP_ARROW     = auto()   # ➡️  result type
 
     # ── Delimiters ──
     ARENA        = auto()   # 🏟️  block delimiter
     TERMINATOR   = auto()   # ⚔️  statement terminator
     LPAREN       = auto()   # (
     RPAREN       = auto()   # )
+    COMMA        = auto()   # ,
+    DOT          = auto()   # .
 
     # ── Special ──
     EOF          = auto()
@@ -80,6 +89,8 @@ class Token:
             return f"identifier '{self.text}'"
         if self.kind == TokenKind.INT_LITERAL:
             return f"integer {self.text}"
+        if self.kind == TokenKind.STRING_LITERAL:
+            return "a string literal"
         return f"'{self.text}'"
 
     def __repr__(self):
@@ -97,6 +108,8 @@ _EMOJI_MAP: "list[tuple[bytes, TokenKind]]" = []
 _SPELLING: "dict[TokenKind, str]" = {
     TokenKind.LPAREN: "(",
     TokenKind.RPAREN: ")",
+    TokenKind.COMMA:  ",",
+    TokenKind.DOT:    ".",
 }
 
 
@@ -121,6 +134,11 @@ _e("📢",    TokenKind.KW_SHOUT)
 _e("💥",    TokenKind.KW_CLASH)
 _e("🏆",    TokenKind.KW_VICTORY)
 _e("💀",    TokenKind.KW_DEFEAT)
+_e("🪄",    TokenKind.KW_SPELL)
+_e("🏁",    TokenKind.KW_FINISH)
+_e("📦",    TokenKind.KW_CRATE)
+_e("🆕",    TokenKind.KW_NEW)
+_e("📥",    TokenKind.KW_READ)
 _e("🎯",    TokenKind.OP_ASSIGN)
 _e("🔫",    TokenKind.OP_TYPE_ANN)
 _e("⚖️",    TokenKind.OP_EQ)
@@ -135,11 +153,29 @@ _e("🎲",    TokenKind.OP_MOD)
 _e("👾",    TokenKind.OP_OR)
 _e("🤝",    TokenKind.OP_AND)
 _e("🚫",    TokenKind.OP_NOT)
+_e("➡️",    TokenKind.OP_ARROW)
 _e("🏟️",   TokenKind.ARENA)
 _e("⚔️",    TokenKind.TERMINATOR)
 
 # Sort by descending byte-length so longer sequences match first.
 _EMOJI_MAP.sort(key=lambda pair: len(pair[0]), reverse=True)
+
+
+# Single-character ASCII tokens.
+_PUNCT: "dict[int, TokenKind]" = {
+    ord("("): TokenKind.LPAREN,
+    ord(")"): TokenKind.RPAREN,
+    ord(","): TokenKind.COMMA,
+    ord("."): TokenKind.DOT,
+}
+
+# Escape sequences allowed inside a string literal.
+_ESCAPES: "dict[int, str]" = {
+    ord("n"):  "\n",
+    ord("t"):  "\t",
+    ord('"'):  '"',
+    ord("\\"): "\\",
+}
 
 
 def describe_kind(kind: TokenKind) -> str:
@@ -148,6 +184,8 @@ def describe_kind(kind: TokenKind) -> str:
         return "an identifier"
     if kind == TokenKind.INT_LITERAL:
         return "an integer"
+    if kind == TokenKind.STRING_LITERAL:
+        return "a string literal"
     if kind == TokenKind.EOF:
         return "end of file"
     return f"'{_SPELLING[kind]}'"
@@ -265,13 +303,14 @@ class Lexer:
                     self._advance()
                 return Token(kind, text, start_line, start_col)
 
-        # ── Parentheses ────────────────────────────────────────────────
-        if b == ord("("):
+        # ── Single ASCII punctuation ───────────────────────────────────
+        if b in _PUNCT:
             self._advance()
-            return Token(TokenKind.LPAREN, "(", start_line, start_col)
-        if b == ord(")"):
-            self._advance()
-            return Token(TokenKind.RPAREN, ")", start_line, start_col)
+            return Token(_PUNCT[b], chr(b), start_line, start_col)
+
+        # ── String literal ──────────────────────────────────────────────
+        if b == ord('"'):
+            return self._scan_string(start_line, start_col)
 
         # ── Integer literal ─────────────────────────────────────────────
         if b >= ord("0") and b <= ord("9"):
@@ -291,6 +330,30 @@ class Lexer:
             self._advance()
         text = self._data[start:self._pos].decode("utf-8")
         return Token(TokenKind.INT_LITERAL, text, line, col)
+
+    def _scan_string(self, line: int, col: int) -> Token:
+        """Scan "…" on one line; the token text is the decoded value."""
+        self._advance()  # opening quote
+        chars: list[str] = []
+        while True:
+            if self._pos >= len(self._data) or self._data[self._pos] == ord("\n"):
+                raise CompileError(line, col, "unterminated string literal")
+            b = self._data[self._pos]
+            if b == ord('"'):
+                self._advance()
+                return Token(TokenKind.STRING_LITERAL, "".join(chars), line, col)
+            if b == ord("\\"):
+                esc_line, esc_col = self._line, self._col
+                self._advance()
+                if self._pos >= len(self._data) or self._data[self._pos] not in _ESCAPES:
+                    if self._pos >= len(self._data) or self._data[self._pos] == ord("\n"):
+                        raise CompileError(line, col, "unterminated string literal")
+                    ch = self._advance_codepoint()
+                    raise CompileError(esc_line, esc_col,
+                                       f"unknown escape sequence '\\{ch}'")
+                chars.append(_ESCAPES[self._advance()])
+                continue
+            chars.append(self._advance_codepoint())
 
     def _scan_identifier(self, line: int, col: int) -> Token:
         start = self._pos

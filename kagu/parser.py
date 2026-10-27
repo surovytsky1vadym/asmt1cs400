@@ -7,7 +7,9 @@ from .lexer import Token, TokenKind, describe_kind
 from .nodes import (
     ProgramNode, StmtNode, VarDeclNode, ConstDeclNode, AssignNode, IfNode,
     PrintNode, OverflowCheckNode, ExprNode, IntLiteralNode, BoolLiteralNode,
-    IdentifierNode, BinaryOpNode, UnaryOpNode,
+    IdentifierNode, BinaryOpNode, UnaryOpNode, ReturnNode, CallStmtNode,
+    ParamNode, FuncDeclNode, FieldDeclNode, StructDeclNode, StringLiteralNode,
+    CallNode, NewNode, ReadNode, FieldStep, MemberCallStep, ChainNode,
 )
 
 
@@ -36,11 +38,80 @@ class Parser:
     # ── program ─────────────────────────────────────────────────────────
 
     def parse(self) -> ProgramNode:
-        stmts: list[StmtNode] = []
+        items: list[StmtNode] = []
         first = self._peek()
         while not self._at(TokenKind.EOF):
-            stmts.append(self._parse_statement())
-        return ProgramNode(stmts, first.line, first.col)
+            items.append(self._parse_top_item())
+        return ProgramNode(items, first.line, first.col)
+
+    def _parse_top_item(self) -> StmtNode:
+        if self._at(TokenKind.KW_SPELL):
+            return self._parse_func_decl()
+        if self._at(TokenKind.KW_CRATE):
+            return self._parse_struct_decl()
+        return self._parse_statement()
+
+    # ── function declaration ────────────────────────────────────────────
+
+    def _parse_func_decl(self) -> FuncDeclNode:
+        start = self._eat(TokenKind.KW_SPELL)
+        name_tok = self._eat(TokenKind.IDENTIFIER)
+        self._eat(TokenKind.LPAREN)
+        params: list[ParamNode] = []
+        if not self._at(TokenKind.RPAREN):
+            params = self._parse_param_list()
+        self._eat(TokenKind.RPAREN)
+        self._eat(TokenKind.OP_ARROW)
+        result = self._parse_type_name()
+        self._eat(TokenKind.ARENA)
+        body = self._parse_stmt_block()
+        self._eat(TokenKind.ARENA)
+        return FuncDeclNode(name_tok.text, params, result, body, start.line, start.col)
+
+    def _parse_param_list(self) -> list[ParamNode]:
+        params = [self._parse_param()]
+        while self._at(TokenKind.COMMA):
+            self._eat(TokenKind.COMMA)
+            params.append(self._parse_param())
+        return params
+
+    def _parse_param(self) -> ParamNode:
+        name_tok = self._eat(TokenKind.IDENTIFIER)
+        self._eat(TokenKind.OP_TYPE_ANN)
+        type_name = self._parse_type_name()
+        return ParamNode(name_tok.text, type_name, name_tok.line, name_tok.col)
+
+    # ── structure declaration ───────────────────────────────────────────
+
+    def _parse_struct_decl(self) -> StructDeclNode:
+        start = self._eat(TokenKind.KW_CRATE)
+        name_tok = self._eat(TokenKind.IDENTIFIER)
+        self._eat(TokenKind.ARENA)
+        fields: list[FieldDeclNode] = []
+        members: list[FuncDeclNode] = []
+        while not self._at(TokenKind.ARENA):
+            tok = self._peek()
+            if tok.kind in (TokenKind.KW_SPAWN, TokenKind.KW_FORGE):
+                fields.append(self._parse_field_decl(len(fields)))
+            elif tok.kind == TokenKind.KW_SPELL:
+                member = self._parse_func_decl()
+                member.owner = name_tok.text
+                members.append(member)
+            else:
+                error_at(tok, "expected a field (🎮 / 🏰) or a member function (🪄) "
+                              f"in a structure, got {tok.describe()}")
+        self._eat(TokenKind.ARENA)
+        return StructDeclNode(name_tok.text, fields, members, start.line, start.col)
+
+    def _parse_field_decl(self, index: int) -> FieldDeclNode:
+        kw = self._peek()
+        self._eat(kw.kind)
+        name_tok = self._eat(TokenKind.IDENTIFIER)
+        self._eat(TokenKind.OP_TYPE_ANN)
+        type_name = self._parse_type_name()
+        self._eat(TokenKind.TERMINATOR)
+        return FieldDeclNode(name_tok.text, type_name, kw.kind == TokenKind.KW_SPAWN,
+                             index, kw.line, kw.col)
 
     # ── statement ───────────────────────────────────────────────────────
 
@@ -57,8 +128,12 @@ class Parser:
             return self._parse_print()
         if tok.kind == TokenKind.KW_CLASH:
             return self._parse_overflow_check()
+        if tok.kind == TokenKind.KW_FINISH:
+            return self._parse_return()
         if tok.kind == TokenKind.IDENTIFIER:
-            return self._parse_assignment()
+            return self._parse_ident_statement()
+        if tok.kind in (TokenKind.KW_SPELL, TokenKind.KW_CRATE):
+            error_at(tok, "functions and structures may be declared only at the top level")
 
         error_at(tok, f"unexpected {tok.describe()} at start of statement")
 
@@ -86,14 +161,38 @@ class Parser:
         self._eat(TokenKind.TERMINATOR)
         return ConstDeclNode(name_tok.text, type_tok, value, start.line, start.col)
 
-    # ── assignment ──────────────────────────────────────────────────────
+    # ── assignment / call statement ─────────────────────────────────────
 
-    def _parse_assignment(self) -> AssignNode:
-        name_tok = self._eat(TokenKind.IDENTIFIER)
-        self._eat(TokenKind.OP_ASSIGN)
+    def _parse_ident_statement(self) -> StmtNode:
+        """Read a postfix chain, then decide: a call statement if the chain
+        ends in a call, otherwise an assignment to an lvalue."""
+        start = self._peek()
+        target = self._parse_postfix()
+
+        if self._is_call(target):
+            self._eat(TokenKind.TERMINATOR)
+            return CallStmtNode(target, start.line, start.col)
+
+        assign_tok = self._eat(TokenKind.OP_ASSIGN)
+        if not self._is_lvalue(target):
+            error_at(assign_tok, "only a variable or a field chain can be assigned to")
         value = self._parse_expr()
         self._eat(TokenKind.TERMINATOR)
-        return AssignNode(name_tok.text, value, name_tok.line, name_tok.col)
+        return AssignNode(target, value, start.line, start.col)
+
+    @staticmethod
+    def _is_call(expr: ExprNode) -> bool:
+        if isinstance(expr, CallNode):
+            return True
+        return isinstance(expr, ChainNode) and expr.ends_in_call
+
+    @staticmethod
+    def _is_lvalue(expr: ExprNode) -> bool:
+        if isinstance(expr, IdentifierNode):
+            return True
+        return (isinstance(expr, ChainNode)
+                and isinstance(expr.base, IdentifierNode)
+                and all(isinstance(s, FieldStep) for s in expr.steps))
 
     # ── if / else ───────────────────────────────────────────────────────
 
@@ -127,9 +226,27 @@ class Parser:
 
     def _parse_print(self) -> PrintNode:
         start = self._eat(TokenKind.KW_SHOUT)
-        expr = self._parse_expr()
+        items = [self._parse_print_item()]
+        while self._at(TokenKind.COMMA):
+            self._eat(TokenKind.COMMA)
+            items.append(self._parse_print_item())
         self._eat(TokenKind.TERMINATOR)
-        return PrintNode(expr, start.line, start.col)
+        return PrintNode(items, start.line, start.col)
+
+    def _parse_print_item(self) -> ExprNode:
+        tok = self._peek()
+        if tok.kind == TokenKind.STRING_LITERAL:
+            self._eat(TokenKind.STRING_LITERAL)
+            return StringLiteralNode(tok.text, tok.line, tok.col)
+        return self._parse_expr()
+
+    # ── return ──────────────────────────────────────────────────────────
+
+    def _parse_return(self) -> ReturnNode:
+        start = self._eat(TokenKind.KW_FINISH)
+        value = self._parse_expr()
+        self._eat(TokenKind.TERMINATOR)
+        return ReturnNode(value, start.line, start.col)
 
     # ── overflow check ──────────────────────────────────────────────────
 
@@ -154,7 +271,11 @@ class Parser:
         if tok.kind == TokenKind.TYPE_BOOL:
             self._eat(TokenKind.TYPE_BOOL)
             return "bool"
-        error_at(tok, f"expected a type (💎32, 💎64 or 🛡️), got {tok.describe()}")
+        if tok.kind == TokenKind.IDENTIFIER:
+            self._eat(TokenKind.IDENTIFIER)
+            return tok.text
+        error_at(tok, f"expected a type (💎32, 💎64, 🛡️ or a structure name), "
+                      f"got {tok.describe()}")
 
     # ── expressions (precedence climbing) ───────────────────────────────
 
@@ -244,7 +365,33 @@ class Parser:
             op_tok = self._eat(TokenKind.OP_NOT)
             operand = self._parse_unary()
             return UnaryOpNode("NOT", operand, op_tok.line, op_tok.col)
-        return self._parse_primary()
+        return self._parse_postfix()
+
+    def _parse_postfix(self) -> ExprNode:
+        base = self._parse_primary()
+        steps = []
+        while self._at(TokenKind.DOT):
+            self._eat(TokenKind.DOT)
+            name_tok = self._eat(TokenKind.IDENTIFIER)
+            if self._at(TokenKind.LPAREN):
+                args = self._parse_call_args()
+                steps.append(MemberCallStep(name_tok.text, args, name_tok.line, name_tok.col))
+            else:
+                steps.append(FieldStep(name_tok.text, name_tok.line, name_tok.col))
+        if not steps:
+            return base
+        return ChainNode(base, steps, base.line, base.col)
+
+    def _parse_call_args(self) -> list[ExprNode]:
+        self._eat(TokenKind.LPAREN)
+        args: list[ExprNode] = []
+        if not self._at(TokenKind.RPAREN):
+            args.append(self._parse_expr())
+            while self._at(TokenKind.COMMA):
+                self._eat(TokenKind.COMMA)
+                args.append(self._parse_expr())
+        self._eat(TokenKind.RPAREN)
+        return args
 
     def _parse_primary(self) -> ExprNode:
         tok = self._peek()
@@ -263,7 +410,20 @@ class Parser:
 
         if tok.kind == TokenKind.IDENTIFIER:
             self._eat(TokenKind.IDENTIFIER)
+            if self._at(TokenKind.LPAREN):
+                return CallNode(tok.text, self._parse_call_args(), tok.line, tok.col)
             return IdentifierNode(tok.text, tok.line, tok.col)
+
+        if tok.kind == TokenKind.KW_NEW:
+            self._eat(TokenKind.KW_NEW)
+            type_tok = self._eat(TokenKind.IDENTIFIER)
+            return NewNode(type_tok.text, self._parse_call_args(), tok.line, tok.col)
+
+        if tok.kind == TokenKind.KW_READ:
+            self._eat(TokenKind.KW_READ)
+            self._eat(TokenKind.LPAREN)
+            self._eat(TokenKind.RPAREN)
+            return ReadNode(tok.line, tok.col)
 
         if tok.kind == TokenKind.LPAREN:
             self._eat(TokenKind.LPAREN)

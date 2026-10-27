@@ -1,0 +1,9 @@
+// Test: function declaration, return, nested calls as arguments
+🪄 add(a 🔫 💎32, b 🔫 💎64) ➡️ 💎64 🏟️
+  🏁 a ➕ b ⚔️
+🏟️
+🪄 seven() ➡️ 💎32 🏟️
+  🏁 7 ⚔️
+🏟️
+🏰 total 🔫 💎64 🎯 add(seven(), add(1, 2)) ⚔️
+📢 "total = ", total ⚔️
