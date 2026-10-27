@@ -1,0 +1,11 @@
+// End to end: several reads, an i64 accumulator and a comparison
+🎮 a 🔫 💎32 🎯 📥() ⚔️
+🎮 b 🔫 💎32 🎯 📥() ⚔️
+🎮 c 🔫 💎32 🎯 📥() ⚔️
+🏰 sum 🔫 💎64 🎯 a ➕ b ➕ c ⚔️
+📢 "sum = ", sum ⚔️
+🐉 sum ⬆️ 100 🏟️
+  📢 "big" ⚔️
+🏟️ 👻 🏟️
+  📢 "small" ⚔️
+🏟️

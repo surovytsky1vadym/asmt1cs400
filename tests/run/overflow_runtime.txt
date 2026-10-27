@@ -1,0 +1,8 @@
+// End to end: i32 arithmetic that overflows stops the program with a
+// runtime error on stderr and exit code 1
+🎮 x 🔫 💎32 🎯 2147483600 ⚔️
+📢 x ⚔️
+x 🎯 x ➕ 47 ⚔️
+📢 x ⚔️
+x 🎯 x ➕ 1 ⚔️
+📢 "not reached" ⚔️

@@ -1,0 +1,43 @@
+Program
+  StructDecl(name=Point)
+    fields:
+      Field(name=x, type=i32, index=0, mutable=True)
+  StructDecl(name=Circle)
+    fields:
+      Field(name=center, type=Point, index=0, mutable=True)
+      Field(name=r, type=i32, index=1, mutable=False)
+    members:
+      MemberFunc(struct=Circle, name=origin, result=Point)
+        params: (none)
+        body:
+          Return
+            value:
+              Identifier(center)
+  VarDecl(name=c, type=Circle, mutable=True)
+    value:
+      New(type=Circle, args=2)
+        args:
+          New(type=Point, args=1)
+            args:
+              IntLiteral(1)
+          IntLiteral(5)
+  Assign(target=chain)
+    target:
+      Chain(ends_in_member_call=False)
+        base:
+          Identifier(c)
+        steps:
+          Field(.center)
+          Field(.x)
+    value:
+      BinaryOp(op=PLUS)
+        left:
+          Chain(ends_in_member_call=False)
+            base:
+              Identifier(c)
+            steps:
+              MemberCall(.origin, args=0)
+                args: (none)
+              Field(.x)
+        right:
+          IntLiteral(1)

@@ -1,0 +1,5 @@
+// A structure that contains itself by value
+📦 Node 🏟️
+  🎮 value 🔫 💎32 ⚔️
+  🎮 next 🔫 Node ⚔️
+🏟️

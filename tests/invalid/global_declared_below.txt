@@ -1,0 +1,5 @@
+// A function sees only the globals declared above it
+🪄 readLimit() ➡️ 💎32 🏟️
+  🏁 limit ⚔️
+🏟️
+🏰 limit 🔫 💎32 🎯 10 ⚔️

@@ -1,0 +1,19 @@
+// End to end: an i32 widens to i64 implicitly (declaration, argument,
+// return, mixed arithmetic); literals that need 64 bits are i64
+🪄 twice(v 🔫 💎64) ➡️ 💎64 🏟️
+  🏁 v ✖️ 2 ⚔️
+🏟️
+
+🪄 small() ➡️ 💎64 🏟️
+  🏰 s 🔫 💎32 🎯 21 ⚔️
+  🏁 s ⚔️
+🏟️
+
+🏰 a 🔫 💎32 🎯 2147483647 ⚔️
+🏰 b 🔫 💎64 🎯 a ⚔️
+📢 twice(a) ⚔️
+📢 b ➕ 1 ⚔️
+📢 small() ✖️ 2 ⚔️
+📢 5000000000 ➗ a ⚔️
+💥 b ➖ 1 🔫 💎32 ⚔️
+📢 "fits" ⚔️

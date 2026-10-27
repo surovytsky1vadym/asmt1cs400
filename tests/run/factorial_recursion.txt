@@ -1,0 +1,10 @@
+// End to end: a recursive function with an i64 result
+🪄 fact(n 🔫 💎32) ➡️ 💎64 🏟️
+  🐉 n ⬇️⚖️ 1 🏟️
+    🏁 1 ⚔️
+  🏟️
+  🏁 n ✖️ fact(n ➖ 1) ⚔️
+🏟️
+
+📢 fact(5) ⚔️
+📢 fact(20) ⚔️

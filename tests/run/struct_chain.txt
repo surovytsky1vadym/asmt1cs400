@@ -1,0 +1,19 @@
+// End to end: nested structures, chained access and assignment, printing objects
+📦 Point 🏟️
+  🎮 x 🔫 💎32 ⚔️
+  🎮 y 🔫 💎32 ⚔️
+🏟️
+
+📦 Circle 🏟️
+  🎮 center 🔫 Point ⚔️
+  🏰 r 🔫 💎32 ⚔️
+  🎮 visible 🔫 🛡️ ⚔️
+🏟️
+
+🎮 c 🔫 Circle 🎯 🆕 Circle(🆕 Point(1, 2), 5, 🏆) ⚔️
+📢 c ⚔️
+c.center.x 🎯 c.center.x ➕ 10 ⚔️
+c.visible 🎯 💀 ⚔️
+📢 c.center.x, " ", c.center.y, " ", c.r ⚔️
+📢 c.center ⚔️
+📢 c ⚔️

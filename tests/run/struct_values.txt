@@ -1,0 +1,21 @@
+// End to end: objects are passed and returned by value; a copy is independent
+📦 Pair 🏟️
+  🎮 a 🔫 💎32 ⚔️
+  🎮 b 🔫 💎32 ⚔️
+  🪄 swapped() ➡️ Pair 🏟️
+    🏁 🆕 Pair(b, a) ⚔️
+  🏟️
+🏟️
+
+🪄 sum(p 🔫 Pair) ➡️ 💎32 🏟️
+  🏁 p.a ➕ p.b ⚔️
+🏟️
+
+🎮 p 🔫 Pair 🎯 🆕 Pair(1, 2) ⚔️
+🎮 q 🔫 Pair 🎯 p ⚔️
+q.a 🎯 100 ⚔️
+📢 p, " ", q ⚔️
+📢 p.swapped(), " ", p.swapped().a ⚔️
+📢 sum(q), " ", sum(🆕 Pair(3, 4)) ⚔️
+p 🎯 q.swapped() ⚔️
+📢 p ⚔️

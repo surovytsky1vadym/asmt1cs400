@@ -1,0 +1,28 @@
+// End to end: inside a member function a name is looked up among the
+// parameters and locals, then the fields, then the globals
+🏰 value 🔫 💎32 🎯 1000 ⚔️
+🏰 bonus 🔫 💎32 🎯 7 ⚔️
+
+📦 Box 🏟️
+  🎮 value 🔫 💎32 ⚔️
+
+  🪄 fromField() ➡️ 💎32 🏟️
+    🏁 value ⚔️
+  🏟️
+
+  🪄 fromParam(value 🔫 💎32) ➡️ 💎32 🏟️
+    🏁 value ⚔️
+  🏟️
+
+  🪄 fromLocal() ➡️ 💎32 🏟️
+    🏰 value 🔫 💎32 🎯 3 ⚔️
+    🏁 value ⚔️
+  🏟️
+
+  🪄 fromGlobal() ➡️ 💎32 🏟️
+    🏁 bonus ⚔️
+  🏟️
+🏟️
+
+🏰 b 🔫 Box 🎯 🆕 Box(10) ⚔️
+📢 b.fromField(), " ", b.fromParam(20), " ", b.fromLocal(), " ", b.fromGlobal(), " ", value ⚔️

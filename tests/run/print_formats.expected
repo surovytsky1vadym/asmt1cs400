@@ -1,0 +1,8 @@
+42
+-2147483648 9223372036854775807
+true false false
+tab:	quote:" backslash:\ emoji: 🎮
+two
+lines
+flag = Flag(id: 3000000000, on: true)
+ab12

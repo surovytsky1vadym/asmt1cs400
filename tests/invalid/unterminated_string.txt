@@ -1,0 +1,2 @@
+// String literal that is never closed
+📢 "hello ⚔️

@@ -1,0 +1,4 @@
+// Assignment to the result of a member call
+📦 P 🏟️ 🎮 x 🔫 💎32 ⚔️ 🪄 me() ➡️ P 🏟️ 🏁 🆕 P(x) ⚔️ 🏟️ 🏟️
+🎮 p 🔫 P 🎯 🆕 P(1) ⚔️
+p.me().x 🎯 2 ⚔️

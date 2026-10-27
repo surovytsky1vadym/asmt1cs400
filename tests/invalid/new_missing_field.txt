@@ -1,0 +1,10 @@
+// 🆕 needs a value for every field
+📦 Point 🏟️
+  🏰 x 🔫 💎32 ⚔️
+  🎮 y 🔫 💎32 ⚔️
+  🪄 shift(dy 🔫 💎32) ➡️ 💎32 🏟️
+    y 🎯 y ➕ dy ⚔️
+    🏁 y ⚔️
+  🏟️
+🏟️
+🎮 p 🔫 Point 🎯 🆕 Point(1) ⚔️

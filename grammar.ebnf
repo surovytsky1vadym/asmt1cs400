@@ -1,29 +1,60 @@
 (* ═══════════════════════════════════════════════════════════════════════════ *)
 (*  KaguLang — a gaming-themed emoji programming language                    *)
-(*  EBNF Grammar (ISO 14977 style)                                          *)
+(*  EBNF Grammar (ISO 14977 style) — Stage 2                                *)
 (* ═══════════════════════════════════════════════════════════════════════════ *)
 
 (* ── Program structure ──────────────────────────────────────────────────── *)
-program        = { statement } ;
+(* Functions and structures may be declared only at the top level.  The
+   top-level statements form the program's main body and run in order.      *)
+program        = { topItem } ;
+
+topItem        = funcDecl
+               | structDecl
+               | statement ;
 
 (* ── Comments (handled by the lexer, skipped before tokenising) ─────────── *)
 (* A single-line comment starts with "//" and extends to the end of the line.
    Comments are not tokens and do not appear in the AST.                     *)
 comment        = "//" , { any_char_except_newline } , newline ;
 
+(* ── Functions ──────────────────────────────────────────────────────────── *)
+(* 🪄 add(a 🔫 💎32, b 🔫 💎32) ➡️ 💎32 🏟️ 🏁 a ➕ b ⚔️ 🏟️
+   - 🪄  keyword "spell" (function / member function)
+   - ➡️  result type arrow; every function has a result type (no void)
+   - parameters are constants inside the body                              *)
+funcDecl       = "🪄" , identifier , "(" , [ paramList ] , ")" ,
+                 "➡️" , typeName , "🏟️" , stmtBlock , "🏟️" ;
+
+paramList      = param , { "," , param } ;
+
+param          = identifier , "🔫" , typeName ;
+
+(* ── Structures ─────────────────────────────────────────────────────────── *)
+(* 📦 Point 🏟️ 🏰 x 🔫 💎32 ⚔️ 🎮 y 🔫 💎32 ⚔️ 🪄 d2() ➡️ 💎32 🏟️ … 🏟️ 🏟️
+   - 📦  keyword "crate" (structure declaration)
+   - a field declared with 🎮 is mutable, with 🏰 constant
+   - a funcDecl inside a structure is a member function                    *)
+structDecl     = "📦" , identifier , "🏟️" , { structMember } , "🏟️" ;
+
+structMember   = fieldDecl
+               | funcDecl ;
+
+fieldDecl      = ( "🎮" | "🏰" ) , identifier , "🔫" , typeName , "⚔️" ;
+
 (* ── Statements ─────────────────────────────────────────────────────────── *)
 statement      = varDecl
                | constDecl
-               | assignment
+               | identStatement
                | ifStmt
                | printStmt
-               | overflowCheck ;
+               | overflowCheck
+               | returnStmt ;
 
 (* Variable declaration: 🎮 x 🔫 💎32 🎯 42 ⚔️
    - 🎮  keyword "spawn" (declare mutable variable)
    - x   identifier
    - 🔫  type annotation operator (reads "is-a")
-   - 💎32 / 💎64 / 🛡️  type name
+   - 💎32 / 💎64 / 🛡️ / structure name — type name
    - 🎯  assignment operator
    - expr value
    - ⚔️  statement terminator                                               *)
@@ -33,8 +64,21 @@ varDecl        = "🎮" , identifier , "🔫" , typeName , "🎯" , expr , "⚔�
    - 🏰  keyword "forge" (declare constant / immutable variable)            *)
 constDecl      = "🏰" , identifier , "🔫" , typeName , "🎯" , expr , "⚔️" ;
 
-(* Assignment: x 🎯 expr ⚔️                                                *)
-assignment     = identifier , "🎯" , expr , "⚔️" ;
+(* A statement that starts with an identifier.  The parser reads a postfix
+   chain first and then decides: if 🎯 follows, the chain must be an lvalue
+   (an assignment); otherwise the chain must end in a call (a call statement).
+   A bare identifier is an lvalue, so the Stage 1 form "x 🎯 1 ⚔️" is kept.  *)
+identStatement = assignment
+               | callStmt ;
+
+(* Assignment: x 🎯 expr ⚔️   or   c.center.x 🎯 expr ⚔️                    *)
+assignment     = lvalue , "🎯" , expr , "⚔️" ;
+
+lvalue         = identifier , { "." , identifier } ;
+
+(* Call statement: p.shift(1) ⚔️   or   update(3) ⚔️
+   (the postfix chain must end in a function or member call)               *)
+callStmt       = postfix , "⚔️" ;
 
 (* If / else:
    🐉 boolExpr 🏟️ stmt+ 🏟️ [ 👻 🏟️ stmt+ 🏟️ ]
@@ -46,19 +90,28 @@ ifStmt         = "🐉" , expr , "🏟️" , stmtBlock , "🏟️"
 
 stmtBlock      = statement , { statement } ;
 
-(* Print statement: 📢 expr ⚔️
-   - 📢  keyword "shout" (print)                                            *)
-printStmt      = "📢" , expr , "⚔️" ;
+(* Print statement: 📢 "x = ", x ⚔️
+   - 📢  keyword "shout" (print)
+   - the items are printed with no separator, followed by one newline      *)
+printStmt      = "📢" , printItem , { "," , printItem } , "⚔️" ;
+
+printItem      = stringLiteral
+               | expr ;
 
 (* Overflow check: 💥 expr 🔫 typeName ⚔️
    - 💥  keyword "clash" (overflow check)                                   *)
 overflowCheck  = "💥" , expr , "🔫" , typeName , "⚔️" ;
 
+(* Return: 🏁 expr ⚔️
+   - 🏁  keyword "finish" (leave the function with a value)                 *)
+returnStmt     = "🏁" , expr , "⚔️" ;
+
 (* ── Types ──────────────────────────────────────────────────────────────── *)
 (* 💎32  — 32-bit signed integer (i32, range −2 147 483 648 … 2 147 483 647)
    💎64  — 64-bit signed integer (i64)
-   🛡️   — boolean                                                          *)
-typeName       = "💎32" | "💎64" | "🛡️" ;
+   🛡️   — boolean
+   identifier — the name of a structure declared anywhere in the program   *)
+typeName       = "💎32" | "💎64" | "🛡️" | identifier ;
 
 (* ── Expressions ────────────────────────────────────────────────────────── *)
 expr           = orExpr ;
@@ -83,14 +136,23 @@ mulExpr        = unaryExpr , { mulOp , unaryExpr } ;
 
 mulOp          = "✖️" | "➗" | "🎲" ;                     (* * , / , %        *)
 
-unaryExpr      = [ unaryOp ] , primary ;
+unaryExpr      = [ unaryOp ] , postfix ;
 
 unaryOp        = "➖" | "🚫" ;                            (* negation, NOT    *)
 
+(* Postfix chain: ".name" is a field access, ".name(args)" a member call.
+   Chains nest: c.center.x, c.center.shift(1), a.next().x                  *)
+postfix        = primary , { "." , identifier , [ callArgs ] } ;
+
 primary        = intLiteral
                | boolLiteral
-               | identifier
+               | identifier , [ callArgs ]               (* variable | call  *)
+               | "🆕" , identifier , callArgs            (* new object       *)
+               | "📥" , "(" , ")"                        (* read an integer  *)
                | "(" , expr , ")" ;
+
+(* Arguments of a call or of 🆕: one value per parameter / field, in order *)
+callArgs       = "(" , [ expr , { "," , expr } ] , ")" ;
 
 (* ── Literals ───────────────────────────────────────────────────────────── *)
 intLiteral     = digit , { digit } ;
@@ -98,9 +160,20 @@ digit          = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
 boolLiteral    = "🏆" | "💀" ;                           (* true , false     *)
 
+(* A string literal stays on one line; it may appear only in 📢.           *)
+stringLiteral  = '"' , { stringChar | escape } , '"' ;
+stringChar     = any_char - ( '"' | "\" | newline ) ;
+escape         = "\" , ( "n" | "t" | '"' | "\" ) ;
+
 (* ── Identifier ─────────────────────────────────────────────────────────── *)
 identifier     = letter , { letter | digit | "_" } ;
 letter         = "a" | "b" | ... | "z" | "A" | "B" | ... | "Z" | "_" ;
+
+(* ── Lexical notes ──────────────────────────────────────────────────────── *)
+(* The source must be valid UTF-8.  Emoji tokens are matched as exact UTF-8
+   byte sequences, longest match first (so ⬆️⚖️ wins over ⬆️).  Whitespace
+   (space, tab, CR, LF) separates tokens and is otherwise ignored.  "(", ")",
+   "," and "." are single ASCII characters.                                 *)
 
 (* ═══════════════════════════════════════════════════════════════════════════ *)
 (*  Emoji quick-reference                                                    *)
@@ -118,5 +191,8 @@ letter         = "a" | "b" | ... | "z" | "A" | "B" | ... | "Z" | "_" ;
 (*  ➖  minus / negate           ✖️  multiply                               *)
 (*  ➗  divide                   🎲  modulo                                 *)
 (*  👾  logical OR               🤝  logical AND                            *)
-(*  🚫  logical NOT                                                         *)
+(*  🚫  logical NOT              🪄  spell (function)                       *)
+(*  ➡️  result type arrow        🏁  finish (return)                        *)
+(*  📦  crate (structure)        🆕  new object                             *)
+(*  📥  read integer                                                        *)
 (* ═══════════════════════════════════════════════════════════════════════════ *)

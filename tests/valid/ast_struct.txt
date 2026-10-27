@@ -1,0 +1,12 @@
+// Test: structure with constant and mutable fields and a member function
+📦 Point 🏟️
+  🏰 x 🔫 💎32 ⚔️
+  🎮 y 🔫 💎32 ⚔️
+  🪄 shift(dy 🔫 💎32) ➡️ 💎32 🏟️
+    y 🎯 y ➕ dy ⚔️
+    🏁 y ⚔️
+  🏟️
+🏟️
+🎮 p 🔫 Point 🎯 🆕 Point(📥(), 2) ⚔️
+p.shift(1) ⚔️
+📢 p ⚔️
