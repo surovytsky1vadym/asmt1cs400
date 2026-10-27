@@ -1,0 +1,42 @@
+Program
+  ConstDecl(name=MAX_SCORE, type=i32, mutable=False)
+    value:
+      IntLiteral(1000)
+  VarDecl(name=player_score, type=i32, mutable=True)
+    value:
+      IntLiteral(0)
+  VarDecl(name=bonus, type=i32, mutable=True)
+    value:
+      IntLiteral(50)
+  Assign(name=player_score)
+    value:
+      BinaryOp(op=PLUS)
+        left:
+          Identifier(player_score)
+        right:
+          BinaryOp(op=MUL)
+            left:
+              Identifier(bonus)
+            right:
+              IntLiteral(2)
+  If
+    condition:
+      BinaryOp(op=GTE)
+        left:
+          Identifier(player_score)
+        right:
+          Identifier(MAX_SCORE)
+    then:
+      Assign(name=player_score)
+        value:
+          Identifier(MAX_SCORE)
+      Print
+        expr:
+          Identifier(player_score)
+    else:
+      Print
+        expr:
+          Identifier(player_score)
+  OverflowCheck(type=i32)
+    expr:
+      Identifier(player_score)

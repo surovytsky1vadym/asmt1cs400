@@ -1,0 +1,3 @@
+// Test: overflow check
+🎮 big 🔫 💎64 🎯 3000000000 ⚔️
+💥 big 🔫 💎32 ⚔️

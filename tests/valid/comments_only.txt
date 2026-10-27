@@ -1,0 +1,3 @@
+// Test: comments are ignored, empty program is valid
+// This is a comment
+// Another comment

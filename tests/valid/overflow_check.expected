@@ -1,0 +1,7 @@
+Program
+  VarDecl(name=big, type=i64, mutable=True)
+    value:
+      IntLiteral(3000000000)
+  OverflowCheck(type=i32)
+    expr:
+      Identifier(big)

@@ -1,0 +1,23 @@
+Program
+  VarDecl(name=alive, type=bool, mutable=True)
+    value:
+      BoolLiteral(True)
+  VarDecl(name=has_shield, type=bool, mutable=True)
+    value:
+      BoolLiteral(False)
+  VarDecl(name=can_fight, type=bool, mutable=True)
+    value:
+      BinaryOp(op=AND)
+        left:
+          Identifier(alive)
+        right:
+          UnaryOp(op=NOT)
+            operand:
+              Identifier(has_shield)
+  VarDecl(name=can_rest, type=bool, mutable=True)
+    value:
+      BinaryOp(op=OR)
+        left:
+          Identifier(alive)
+        right:
+          Identifier(has_shield)

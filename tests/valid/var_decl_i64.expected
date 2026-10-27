@@ -1,0 +1,4 @@
+Program
+  VarDecl(name=big_num, type=i64, mutable=True)
+    value:
+      IntLiteral(9999999)

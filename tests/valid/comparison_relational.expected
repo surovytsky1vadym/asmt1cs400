@@ -1,0 +1,32 @@
+Program
+  VarDecl(name=a, type=i32, mutable=True)
+    value:
+      IntLiteral(10)
+  VarDecl(name=gt, type=bool, mutable=True)
+    value:
+      BinaryOp(op=GT)
+        left:
+          Identifier(a)
+        right:
+          IntLiteral(5)
+  VarDecl(name=lt, type=bool, mutable=True)
+    value:
+      BinaryOp(op=LT)
+        left:
+          Identifier(a)
+        right:
+          IntLiteral(20)
+  VarDecl(name=gte, type=bool, mutable=True)
+    value:
+      BinaryOp(op=GTE)
+        left:
+          Identifier(a)
+        right:
+          IntLiteral(10)
+  VarDecl(name=lte, type=bool, mutable=True)
+    value:
+      BinaryOp(op=LTE)
+        left:
+          Identifier(a)
+        right:
+          IntLiteral(15)

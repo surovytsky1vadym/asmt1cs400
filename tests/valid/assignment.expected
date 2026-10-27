@@ -1,0 +1,7 @@
+Program
+  VarDecl(name=hp, type=i32, mutable=True)
+    value:
+      IntLiteral(100)
+  Assign(name=hp)
+    value:
+      IntLiteral(50)

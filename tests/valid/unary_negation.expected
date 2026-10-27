@@ -1,0 +1,11 @@
+Program
+  VarDecl(name=x, type=i32, mutable=True)
+    value:
+      UnaryOp(op=NEG)
+        operand:
+          IntLiteral(42)
+  VarDecl(name=y, type=i32, mutable=True)
+    value:
+      UnaryOp(op=NEG)
+        operand:
+          Identifier(x)

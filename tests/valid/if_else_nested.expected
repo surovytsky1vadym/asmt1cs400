@@ -1,0 +1,23 @@
+Program
+  VarDecl(name=level, type=i32, mutable=True)
+    value:
+      IntLiteral(5)
+  If
+    condition:
+      BinaryOp(op=GT)
+        left:
+          Identifier(level)
+        right:
+          IntLiteral(3)
+    then:
+      If
+        condition:
+          BinaryOp(op=LT)
+            left:
+              Identifier(level)
+            right:
+              IntLiteral(10)
+        then:
+          Print
+            expr:
+              Identifier(level)

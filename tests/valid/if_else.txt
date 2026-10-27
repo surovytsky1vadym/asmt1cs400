@@ -1,0 +1,7 @@
+// Test: if-else statement
+🎮 hp 🔫 💎32 🎯 0 ⚔️
+🐉 hp ⬆️ 0 🏟️
+  📢 hp ⚔️
+🏟️ 👻 🏟️
+  📢 0 ⚔️
+🏟️

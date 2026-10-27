@@ -1,0 +1,2 @@
+// Test: constant (immutable) declaration
+🏰 MAX_HP 🔫 💎32 🎯 100 ⚔️

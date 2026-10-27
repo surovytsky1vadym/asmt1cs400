@@ -1,0 +1,4 @@
+Program
+  ConstDecl(name=MAX_HP, type=i32, mutable=False)
+    value:
+      IntLiteral(100)
