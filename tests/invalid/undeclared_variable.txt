@@ -1,0 +1,3 @@
+// Use of a variable before its declaration
+📢 score ⚔️
+🎮 score 🔫 💎32 🎯 0 ⚔️

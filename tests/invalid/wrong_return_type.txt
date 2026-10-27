@@ -1,0 +1,4 @@
+// A function leaving with a value of the wrong type
+🪄 isBig(n 🔫 💎32) ➡️ 🛡️ 🏟️
+  🏁 n ✖️ 2 ⚔️
+🏟️

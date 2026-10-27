@@ -1,0 +1,9 @@
+// End to end: 🤝 and 👾 evaluate the right side only when needed
+🎮 d 🔫 💎32 🎯 0 ⚔️
+🐉 d 💢 0 🤝 10 ➗ d ⬆️ 1 🏟️
+  📢 "divided" ⚔️
+🏟️ 👻 🏟️
+  📢 "skipped the division" ⚔️
+🏟️
+📢 d ⚖️ 0 👾 10 ➗ d ⬆️ 1 ⚔️
+📢 (🏆 🤝 💀) 👾 🚫💀 ⚔️

@@ -1,0 +1,13 @@
+// End to end: the course example in KaguLang — fields read from stdin
+📦 Point 🏟️
+  🎮 x 🔫 💎32 ⚔️
+  🎮 y 🔫 💎32 ⚔️
+
+  🪄 d2() ➡️ 💎32 🏟️
+    🎮 r 🔫 💎32 🎯 x ✖️ x ➕ y ✖️ y ⚔️
+    🏁 r ⚔️
+  🏟️
+🏟️
+
+🏰 p 🔫 Point 🎯 🆕 Point(📥(), 📥()) ⚔️
+📢 p.d2() ⚔️

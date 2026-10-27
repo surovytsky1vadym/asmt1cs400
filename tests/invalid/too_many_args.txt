@@ -1,0 +1,5 @@
+// A call with more arguments than parameters
+🪄 add(a 🔫 💎32, b 🔫 💎32) ➡️ 💎32 🏟️
+  🏁 a ➕ b ⚔️
+🏟️
+📢 add(1, 2, 3) ⚔️

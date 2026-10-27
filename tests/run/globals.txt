@@ -1,0 +1,14 @@
+// End to end: a function sees the globals declared above it and can
+// change the mutable ones
+🎮 calls 🔫 💎32 🎯 0 ⚔️
+🏰 limit 🔫 💎32 🎯 3 ⚔️
+
+🪄 bump(by 🔫 💎32) ➡️ 🛡️ 🏟️
+  calls 🎯 calls ➕ by ⚔️
+  🏁 calls ⬆️⚖️ limit ⚔️
+🏟️
+
+📢 bump(1) ⚔️
+📢 bump(1) ⚔️
+📢 bump(1) ⚔️
+📢 "calls = ", calls ⚔️

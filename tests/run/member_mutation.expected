@@ -1,0 +1,4 @@
+20
+25
+Clock(seconds: Counter(step: 5, value: 25))
+42

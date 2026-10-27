@@ -1,0 +1,17 @@
+// A member function is mutating when it calls a mutating one on a field
+📦 Point 🏟️
+  🏰 x 🔫 💎32 ⚔️
+  🎮 y 🔫 💎32 ⚔️
+  🪄 shift(dy 🔫 💎32) ➡️ 💎32 🏟️
+    y 🎯 y ➕ dy ⚔️
+    🏁 y ⚔️
+  🏟️
+🏟️
+📦 Shape 🏟️
+  🎮 anchor 🔫 Point ⚔️
+  🪄 nudge() ➡️ 💎32 🏟️
+    🏁 anchor.shift(1) ⚔️
+  🏟️
+🏟️
+🏰 s 🔫 Shape 🎯 🆕 Shape(🆕 Point(0, 0)) ⚔️
+s.nudge() ⚔️
