@@ -1,0 +1,33 @@
+Program
+  FuncDecl(name=helper, result=i32)
+    params:
+      Param(name=n, type=i32, mutable=False)
+    body:
+      Return
+        value:
+          BinaryOp(op=MUL)
+            left:
+              Identifier(n)
+            right:
+              Identifier(n)
+  ConstDecl(name=used_n_1, type=i32, mutable=False)
+    value:
+      IntLiteral(3)
+  ConstDecl(name=used_result_1, type=i32, mutable=False)
+    value:
+      BinaryOp(op=PLUS)
+        left:
+          Call(name=helper, args=1)
+            args:
+              Identifier(used_n_1)
+        right:
+          Call(name=helper, args=1)
+            args:
+              BinaryOp(op=PLUS)
+                left:
+                  Identifier(used_n_1)
+                right:
+                  IntLiteral(1)
+  Print
+    expr:
+      Identifier(used_result_1)

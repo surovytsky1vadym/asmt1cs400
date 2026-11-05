@@ -9,15 +9,29 @@
 #                          that file exists)
 #  tests/invalid/NAME.txt  compilation must fail: exit code != 0, no output
 #                          file, and stderr equal to NAME.expected
+#  tests/optimizer/NAME.txt  --optimize --ast must equal NAME.ast; the program
+#                          is built with and without --optimize and both
+#                          runs must print NAME.expected
+#  programs/NAME.txt       the real program; every recorded session
+#                          programs/NAME.K.in is run and must print
+#                          programs/NAME.K.expected
+#
+#  ./run_tests.sh --optimize  compiles every end-to-end, invalid and program
+#                             test with --optimize as well (the --ast tests of
+#                             the parser are unchanged).
 #
 #  Environment: PYTHON (default python3), CLANG (default clang).
 # ──────────────────────────────────────────────────────────────────────────────
 
 set -uo pipefail
+shopt -s nullglob
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 COMPILER="$SCRIPT_DIR/compiler.py"
 TESTS_DIR="$SCRIPT_DIR/tests"
+PROGRAMS_DIR="$SCRIPT_DIR/programs"
+OPT=()
+[ "${1:-}" = "--optimize" ] && OPT=(--optimize)
 PYTHON="${PYTHON:-python3}"
 CLANG="${CLANG:-clang}"
 
@@ -81,7 +95,7 @@ for input in "$TESTS_DIR"/run/*.txt; do
         fail "$name" "missing expected file"
         continue
     fi
-    if ! "$PYTHON" "$COMPILER" "$input" "$WORK/prog.ll" 2> "$WORK/err"; then
+    if ! "$PYTHON" "$COMPILER" ${OPT[@]+"${OPT[@]}"} "$input" "$WORK/prog.ll" 2> "$WORK/err"; then
         fail "$name" "compilation failed: $(head -1 "$WORK/err")"
         continue
     fi
@@ -116,7 +130,7 @@ for input in "$TESTS_DIR"/invalid/*.txt; do
         continue
     fi
     rm -f "$WORK/bad.ll"
-    "$PYTHON" "$COMPILER" "$input" "$WORK/bad.ll" > /dev/null 2> "$WORK/err"
+    "$PYTHON" "$COMPILER" ${OPT[@]+"${OPT[@]}"} "$input" "$WORK/bad.ll" > /dev/null 2> "$WORK/err"
     rc=$?
     if [ "$rc" -eq 0 ]; then
         fail "$name" "compiled without an error"
@@ -128,6 +142,66 @@ for input in "$TESTS_DIR"/invalid/*.txt; do
     else
         pass "$name"
     fi
+done
+
+# build SOURCE BINARY [FLAGS...] — compile with the given flags and link
+build() {
+    local src="$1" bin="$2"
+    shift 2
+    "$PYTHON" "$COMPILER" "$@" "$src" "$WORK/b.ll" 2> "$WORK/err" &&
+        "$CLANG" -Wno-override-module "$WORK/b.ll" -o "$bin" 2>> "$WORK/err"
+}
+
+# ── Optimizer ────────────────────────────────────────────────────────────────
+echo ""
+echo "${YELLOW}── Optimizer (--optimize) ──${NC}"
+for input in "$TESTS_DIR"/optimizer/*.txt; do
+    base="${input%.txt}"
+    name="optimizer/$(basename "$base")"
+    "$PYTHON" "$COMPILER" --optimize --ast "$input" > "$WORK/out" 2>&1
+    if ! diff -q "$base.ast" "$WORK/out" > /dev/null; then
+        fail "$name" "tree after --optimize differs"
+        show_diff "$base.ast" "$WORK/out"
+        continue
+    fi
+    ok=1
+    for flags in "" "--optimize"; do
+        if ! build "$input" "$WORK/prog" $flags; then
+            fail "$name" "build ${flags:-without flag} failed: $(head -1 "$WORK/err")"
+            ok=0; break
+        fi
+        stdin_file=/dev/null
+        [ -f "$base.in" ] && stdin_file="$base.in"
+        "$WORK/prog" < "$stdin_file" > "$WORK/out" 2>&1
+        if ! diff -q "$base.expected" "$WORK/out" > /dev/null; then
+            fail "$name" "output ${flags:-without flag} differs"
+            show_diff "$base.expected" "$WORK/out"
+            ok=0; break
+        fi
+    done
+    [ "$ok" -eq 1 ] && pass "$name"
+done
+
+# ── Programs ─────────────────────────────────────────────────────────────────
+echo ""
+echo "${YELLOW}── Programs (recorded sessions) ──${NC}"
+for input in "$PROGRAMS_DIR"/*.txt; do
+    prog="${input%.txt}"
+    if ! build "$input" "$WORK/prog" ${OPT[@]+"${OPT[@]}"}; then
+        fail "programs/$(basename "$prog")" "build failed: $(head -1 "$WORK/err")"
+        continue
+    fi
+    for session in "$prog".*.in; do
+        sbase="${session%.in}"
+        name="programs/$(basename "$sbase")"
+        "$WORK/prog" < "$session" > "$WORK/out" 2>&1
+        if diff -q "$sbase.expected" "$WORK/out" > /dev/null; then
+            pass "$name"
+        else
+            fail "$name" "session output differs"
+            show_diff "$sbase.expected" "$WORK/out"
+        fi
+    done
 done
 
 # ── Summary ──────────────────────────────────────────────────────────────────

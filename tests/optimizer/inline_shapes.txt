@@ -1,0 +1,31 @@
+// sum_to has a loop and an if inside: inlined.  sign leaves through 🏁
+// inside an if: left alone.  fib is recursive: never inlined.  twice is
+// called twice: left alone.
+🪄 sum_to(n 🔫 💎32) ➡️ 💎64 🏟️
+  🎮 total 🔫 💎64 🎯 0 ⚔️
+  🏃 i 🔫 💎32 🎯 1 ⏩ n ➕ 1 🏟️
+    🐉 i 🎲 2 ⚖️ 0 🏟️
+      total 🎯 total ➕ i ⚔️
+    🏟️
+  🏟️
+  🏁 total ⚔️
+🏟️
+🪄 sign(n 🔫 💎32) ➡️ 💎32 🏟️
+  🐉 n ⬇️ 0 🏟️
+    🏁 ➖1 ⚔️
+  🏟️
+  🏁 1 ⚔️
+🏟️
+🪄 fib(n 🔫 💎32) ➡️ 💎32 🏟️
+  🐉 n ⬇️ 2 🏟️
+    🏁 n ⚔️
+  🏟️
+  🏁 fib(n ➖ 1) ➕ fib(n ➖ 2) ⚔️
+🏟️
+🪄 twice(n 🔫 💎32) ➡️ 💎32 🏟️
+  🏁 n ✖️ 2 ⚔️
+🏟️
+📢 "even sum: ", sum_to(10) ⚔️
+📢 "sign: ", sign(➖5) ⚔️
+📢 "fib: ", fib(10) ⚔️
+📢 twice(1), " ", twice(2) ⚔️

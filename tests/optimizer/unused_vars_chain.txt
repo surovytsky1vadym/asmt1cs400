@@ -1,0 +1,9 @@
+// x is read only by y, y only by z, and z by nobody: all three go, one per
+// round.  kept is printed, so it stays with its assignment.
+🎮 x 🔫 💎32 🎯 1 ⚔️
+🎮 y 🔫 💎32 🎯 x ➕ 1 ⚔️
+🎮 z 🔫 💎32 🎯 y ✖️ 2 ⚔️
+z 🎯 z ➕ x ⚔️
+🎮 kept 🔫 💎32 🎯 7 ⚔️
+kept 🎯 kept ➕ 1 ⚔️
+📢 kept ⚔️

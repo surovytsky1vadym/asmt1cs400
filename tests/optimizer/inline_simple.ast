@@ -1,0 +1,37 @@
+Program
+  VarDecl(name=x, type=i32, mutable=True)
+    value:
+      Read
+  ConstDecl(name=square_x_1, type=i32, mutable=False)
+    value:
+      BinaryOp(op=PLUS)
+        left:
+          Identifier(x)
+        right:
+          IntLiteral(1)
+  VarDecl(name=square_r_1, type=i32, mutable=True)
+    value:
+      BinaryOp(op=MUL)
+        left:
+          Identifier(square_x_1)
+        right:
+          Identifier(square_x_1)
+  ConstDecl(name=square_result_1, type=i32, mutable=False)
+    value:
+      Identifier(square_r_1)
+  VarDecl(name=r, type=i32, mutable=True)
+    value:
+      BinaryOp(op=PLUS)
+        left:
+          Identifier(square_result_1)
+        right:
+          IntLiteral(1)
+  Print
+    expr:
+      StringLiteral("x = ")
+    expr:
+      Identifier(x)
+    expr:
+      StringLiteral(", r = ")
+    expr:
+      Identifier(r)

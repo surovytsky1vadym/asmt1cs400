@@ -1,0 +1,136 @@
+Program
+  FuncDecl(name=sign, result=i32)
+    params:
+      Param(name=n, type=i32, mutable=False)
+    body:
+      If
+        condition:
+          BinaryOp(op=LT)
+            left:
+              Identifier(n)
+            right:
+              IntLiteral(0)
+        then:
+          Return
+            value:
+              UnaryOp(op=NEG)
+                operand:
+                  IntLiteral(1)
+      Return
+        value:
+          IntLiteral(1)
+  FuncDecl(name=fib, result=i32)
+    params:
+      Param(name=n, type=i32, mutable=False)
+    body:
+      If
+        condition:
+          BinaryOp(op=LT)
+            left:
+              Identifier(n)
+            right:
+              IntLiteral(2)
+        then:
+          Return
+            value:
+              Identifier(n)
+      Return
+        value:
+          BinaryOp(op=PLUS)
+            left:
+              Call(name=fib, args=1)
+                args:
+                  BinaryOp(op=MINUS)
+                    left:
+                      Identifier(n)
+                    right:
+                      IntLiteral(1)
+            right:
+              Call(name=fib, args=1)
+                args:
+                  BinaryOp(op=MINUS)
+                    left:
+                      Identifier(n)
+                    right:
+                      IntLiteral(2)
+  FuncDecl(name=twice, result=i32)
+    params:
+      Param(name=n, type=i32, mutable=False)
+    body:
+      Return
+        value:
+          BinaryOp(op=MUL)
+            left:
+              Identifier(n)
+            right:
+              IntLiteral(2)
+  ConstDecl(name=sum_to_n_1, type=i32, mutable=False)
+    value:
+      IntLiteral(10)
+  VarDecl(name=sum_to_total_1, type=i64, mutable=True)
+    value:
+      IntLiteral(0)
+  For(var=sum_to_i_1, type=i32)
+    from:
+      IntLiteral(1)
+    to:
+      BinaryOp(op=PLUS)
+        left:
+          Identifier(sum_to_n_1)
+        right:
+          IntLiteral(1)
+    body:
+      If
+        condition:
+          BinaryOp(op=EQ)
+            left:
+              BinaryOp(op=MOD)
+                left:
+                  Identifier(sum_to_i_1)
+                right:
+                  IntLiteral(2)
+            right:
+              IntLiteral(0)
+        then:
+          Assign(name=sum_to_total_1)
+            value:
+              BinaryOp(op=PLUS)
+                left:
+                  Identifier(sum_to_total_1)
+                right:
+                  Identifier(sum_to_i_1)
+  ConstDecl(name=sum_to_result_1, type=i64, mutable=False)
+    value:
+      Identifier(sum_to_total_1)
+  Print
+    expr:
+      StringLiteral("even sum: ")
+    expr:
+      Identifier(sum_to_result_1)
+  Print
+    expr:
+      StringLiteral("sign: ")
+    expr:
+      Call(name=sign, args=1)
+        args:
+          UnaryOp(op=NEG)
+            operand:
+              IntLiteral(5)
+  Print
+    expr:
+      StringLiteral("fib: ")
+    expr:
+      Call(name=fib, args=1)
+        args:
+          IntLiteral(10)
+  Print
+    expr:
+      Call(name=twice, args=1)
+        args:
+          IntLiteral(1)
+    expr:
+      StringLiteral(" ")
+    expr:
+      Call(name=twice, args=1)
+        args:
+          IntLiteral(2)

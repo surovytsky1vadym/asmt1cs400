@@ -1,0 +1,14 @@
+Program
+  VarDecl(name=kept, type=i32, mutable=True)
+    value:
+      IntLiteral(7)
+  Assign(name=kept)
+    value:
+      BinaryOp(op=PLUS)
+        left:
+          Identifier(kept)
+        right:
+          IntLiteral(1)
+  Print
+    expr:
+      Identifier(kept)

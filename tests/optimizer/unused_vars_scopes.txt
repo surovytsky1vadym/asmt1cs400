@@ -1,0 +1,20 @@
+// Shadowing: the inner 'v' is never read, the outer one is.  A value that
+// calls a function or reads input is never dropped: it becomes a call.
+🪄 noisy(n 🔫 💎32) ➡️ 💎32 🏟️
+  📢 "noisy ", n ⚔️
+  🏁 n ⚔️
+🏟️
+
+🎮 v 🔫 💎32 🎯 10 ⚔️
+🐉 v ⬆️ 0 🏟️
+  🎮 v 🔫 💎32 🎯 99 ⚔️
+  📢 "inside" ⚔️
+🏟️
+🎮 a 🔫 💎32 🎯 noisy(1) ⚔️
+🎮 b 🔫 💎32 🎯 📥() ⚔️
+🎮 c 🔫 💎32 🎯 noisy(2) ➕ 1 ⚔️
+🏃 i 🔫 💎32 🎯 0 ⏩ 2 🏟️
+  🎮 waste 🔫 💎32 🎯 i ✖️ 2 ⚔️
+  📢 "i ", i ⚔️
+🏟️
+📢 v ⚔️
