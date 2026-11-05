@@ -10,6 +10,7 @@ from .nodes import (
     IdentifierNode, BinaryOpNode, UnaryOpNode, ReturnNode, CallStmtNode,
     ParamNode, FuncDeclNode, FieldDeclNode, StructDeclNode, StringLiteralNode,
     CallNode, NewNode, ReadNode, FieldStep, MemberCallStep, ChainNode,
+    WhileNode, ForNode, BreakNode,
 )
 
 
@@ -124,6 +125,14 @@ class Parser:
             return self._parse_const_decl()
         if tok.kind == TokenKind.KW_QUEST:
             return self._parse_if()
+        if tok.kind == TokenKind.KW_WHILE:
+            return self._parse_while()
+        if tok.kind == TokenKind.KW_FOR:
+            return self._parse_for()
+        if tok.kind == TokenKind.KW_BREAK:
+            self._eat(TokenKind.KW_BREAK)
+            self._eat(TokenKind.TERMINATOR)
+            return BreakNode(tok.line, tok.col)
         if tok.kind == TokenKind.KW_SHOUT:
             return self._parse_print()
         if tok.kind == TokenKind.KW_CLASH:
@@ -214,6 +223,30 @@ class Parser:
             self._eat(TokenKind.ARENA)
 
         return IfNode(cond, then_body, else_body, start.line, start.col)
+
+    # ── loops ───────────────────────────────────────────────────────────
+
+    def _parse_while(self) -> WhileNode:
+        start = self._eat(TokenKind.KW_WHILE)
+        cond = self._parse_expr()
+        self._eat(TokenKind.ARENA)
+        body = self._parse_stmt_block()
+        self._eat(TokenKind.ARENA)
+        return WhileNode(cond, body, start.line, start.col)
+
+    def _parse_for(self) -> ForNode:
+        start = self._eat(TokenKind.KW_FOR)
+        name_tok = self._eat(TokenKind.IDENTIFIER)
+        self._eat(TokenKind.OP_TYPE_ANN)
+        type_name = self._parse_type_name()
+        self._eat(TokenKind.OP_ASSIGN)
+        lo = self._parse_expr()
+        self._eat(TokenKind.OP_RANGE)
+        hi = self._parse_expr()
+        self._eat(TokenKind.ARENA)
+        body = self._parse_stmt_block()
+        self._eat(TokenKind.ARENA)
+        return ForNode(name_tok.text, type_name, lo, hi, body, start.line, start.col)
 
     def _parse_stmt_block(self) -> list[StmtNode]:
         """Parse one or more statements (the block must not be empty)."""

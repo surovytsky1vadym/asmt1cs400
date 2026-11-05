@@ -120,6 +120,56 @@ class IfNode(StmtNode):
         return "\n".join(lines)
 
 
+class WhileNode(StmtNode):
+    """While loop (🔁): the body runs again while the condition holds."""
+    def __init__(self, condition: "ExprNode", body: list[StmtNode],
+                 line: int, col: int):
+        super().__init__(line, col)
+        self.condition = condition
+        self.body      = body
+
+    def dump(self, indent: int = 0) -> str:
+        prefix = "  " * indent
+        lines = [f"{prefix}While"]
+        lines.append(f"{prefix}  condition:")
+        lines.append(self.condition.dump(indent + 2))
+        lines.append(f"{prefix}  body:")
+        for s in self.body:
+            lines.append(s.dump(indent + 2))
+        return "\n".join(lines)
+
+
+class ForNode(StmtNode):
+    """For loop (🏃) over the integer range [start, end); the loop variable
+    is a constant inside the body."""
+    def __init__(self, name: str, type_name: str, start: "ExprNode",
+                 end: "ExprNode", body: list[StmtNode], line: int, col: int):
+        super().__init__(line, col)
+        self.name      = name
+        self.type_name = type_name
+        self.start     = start
+        self.end       = end
+        self.body      = body
+
+    def dump(self, indent: int = 0) -> str:
+        prefix = "  " * indent
+        lines = [f"{prefix}For(var={self.name}, type={self.type_name})"]
+        lines.append(f"{prefix}  from:")
+        lines.append(self.start.dump(indent + 2))
+        lines.append(f"{prefix}  to:")
+        lines.append(self.end.dump(indent + 2))
+        lines.append(f"{prefix}  body:")
+        for s in self.body:
+            lines.append(s.dump(indent + 2))
+        return "\n".join(lines)
+
+
+class BreakNode(StmtNode):
+    """Leave the innermost loop (🛑)."""
+    def dump(self, indent: int = 0) -> str:
+        return f"{'  ' * indent}Break"
+
+
 class PrintNode(StmtNode):
     """Print statement: one or more items, then a newline."""
     def __init__(self, items: list["ExprNode"], line: int, col: int):

@@ -19,7 +19,7 @@ from .nodes import (
     PrintNode, OverflowCheckNode, ReturnNode, CallStmtNode, FuncDeclNode,
     StructDeclNode, ExprNode, IntLiteralNode, BoolLiteralNode, IdentifierNode,
     BinaryOpNode, UnaryOpNode, StringLiteralNode, CallNode, NewNode, ReadNode,
-    FieldStep, ChainNode,
+    FieldStep, ChainNode, WhileNode, ForNode, BreakNode,
 )
 
 
@@ -47,7 +47,8 @@ def type_name(ty) -> str:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class VarSymbol:
-    """A variable, constant or parameter.  `kind` is global / local / param."""
+    """A variable, constant or parameter.  `kind` is global / local / param /
+    loop (the variable of a 🏃 loop)."""
     def __init__(self, name: str, ty, mutable: bool, kind: str):
         self.name    = name
         self.ty      = ty
@@ -115,11 +116,12 @@ class Scope:
 class _Context:
     """Where a statement is being checked."""
     def __init__(self, scope: Scope, func: FuncInfo | None = None,
-                 globals_seen: dict | None = None):
+                 globals_seen: dict | None = None, in_loop: bool = False):
         self.scope        = scope
         self.func         = func
         self.struct       = func.owner if func else None
         self.globals_seen = globals_seen     # globals visible from a function body
+        self.in_loop      = in_loop          # 🛑 is allowed only inside a loop
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -136,6 +138,7 @@ class Analyzer:
         self.main_body: list[StmtNode] = []
         # (callee, receiver is mutable, call node) for every member call
         self._member_calls: list = []
+        self._exit = "🏁"            # the statement that last ended a block
 
     # ── entry point ─────────────────────────────────────────────────────
 
@@ -154,7 +157,7 @@ class Analyzer:
                 self._check_function(self.functions[item.name])
             else:
                 if returned:
-                    error_at(item, "unreachable statement after 🏁")
+                    error_at(item, f"unreachable statement after {self._exit}")
                 returned = self._check_stmt(item, main_ctx)
                 self.main_body.append(item)
 
@@ -248,11 +251,12 @@ class Analyzer:
                                 f"🏁 returning a value of type {type_name(func.result)}")
 
     def _check_block(self, stmts: list[StmtNode], ctx: _Context) -> bool:
-        """Check statements in order; return True if the block always returns."""
+        """Check statements in order; return True if control never falls
+        through the end of the block (it always returns or breaks)."""
         returned = False
         for stmt in stmts:
             if returned:
-                error_at(stmt, "unreachable statement after 🏁")
+                error_at(stmt, f"unreachable statement after {self._exit}")
             returned = self._check_stmt(stmt, ctx)
         return returned
 
@@ -265,6 +269,15 @@ class Analyzer:
             self._check_assign(stmt, ctx)
         elif isinstance(stmt, IfNode):
             return self._check_if(stmt, ctx)
+        elif isinstance(stmt, WhileNode):
+            self._check_while(stmt, ctx)
+        elif isinstance(stmt, ForNode):
+            self._check_for(stmt, ctx)
+        elif isinstance(stmt, BreakNode):
+            if not ctx.in_loop:
+                error_at(stmt, "🛑 can be used only inside a loop")
+            self._exit = "🛑"
+            return True
         elif isinstance(stmt, PrintNode):
             for item in stmt.items:
                 if isinstance(item, StringLiteralNode):
@@ -279,6 +292,7 @@ class Analyzer:
             ty = self._expr(stmt.value, ctx)
             self._expect(stmt.value, ty, ctx.func.result,
                          f"function '{ctx.func.display}' returns")
+            self._exit = "🏁"
             return True
         elif isinstance(stmt, CallStmtNode):
             self._expr(stmt.call, ctx)
@@ -309,8 +323,34 @@ class Analyzer:
         return stmt.always_returns
 
     @staticmethod
-    def _child(ctx: _Context) -> _Context:
-        return _Context(Scope(ctx.scope), ctx.func, ctx.globals_seen)
+    def _child(ctx: _Context, in_loop: bool = False) -> _Context:
+        return _Context(Scope(ctx.scope), ctx.func, ctx.globals_seen,
+                        ctx.in_loop or in_loop)
+
+    def _check_while(self, stmt: WhileNode, ctx: _Context):
+        cond_ty = self._expr(stmt.condition, ctx)
+        if cond_ty != BOOL:
+            error_at(stmt.condition, f"loop condition must be 🛡️ bool, "
+                                     f"got {type_name(cond_ty)}")
+        # The body may run zero times, so a loop never counts as returning.
+        self._check_block(stmt.body, self._child(ctx, in_loop=True))
+
+    def _check_for(self, stmt: ForNode, ctx: _Context):
+        ty = self._resolve_type(stmt.type_name, stmt)
+        if ty not in INT_TYPES:
+            error_at(stmt, f"loop variable '{stmt.name}' must be an integer, "
+                           f"got {type_name(ty)}")
+        self._expect(stmt.start, self._expr(stmt.start, ctx), ty,
+                     f"range start of '{stmt.name}' must be")
+        self._expect(stmt.end, self._expr(stmt.end, ctx), ty,
+                     f"range end of '{stmt.name}' must be")
+        # The loop variable lives in its own scope around the body; it is a
+        # constant there, the loop itself advances it.
+        head = self._child(ctx, in_loop=True)
+        sym = VarSymbol(stmt.name, ty, False, "loop")
+        head.scope.names[stmt.name] = sym
+        stmt.sym = sym
+        self._check_block(stmt.body, self._child(head))
 
     def _check_overflow(self, stmt: OverflowCheckNode, ctx: _Context):
         ty = self._expr(stmt.expr, ctx)
@@ -334,6 +374,9 @@ class Analyzer:
                     error_at(target, f"cannot assign to constant field '{sym.name}'")
                 ctx.func.assigns_field = True
             elif not sym.mutable:
+                if sym.kind == "loop":
+                    error_at(target, f"cannot assign to loop variable '{sym.name}': "
+                                     f"🏃 advances it")
                 if sym.kind == "param":
                     error_at(target, f"cannot assign to parameter '{sym.name}': "
                                      f"parameters are constant")

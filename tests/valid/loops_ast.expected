@@ -1,0 +1,16 @@
+Program
+  While
+    condition:
+      BinaryOp(op=LT)
+        left:
+          Identifier(x)
+        right:
+          IntLiteral(3)
+    body:
+      For(var=i, type=i64)
+        from:
+          IntLiteral(0)
+        to:
+          Identifier(x)
+        body:
+          Break

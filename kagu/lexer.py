@@ -31,6 +31,10 @@ class TokenKind(Enum):
     KW_CRATE     = auto()   # 📦  structure
     KW_NEW       = auto()   # 🆕  object construction
     KW_READ      = auto()   # 📥  read an integer
+    KW_WHILE     = auto()   # 🔁  while loop
+    KW_FOR       = auto()   # 🏃  for loop over an integer range
+    KW_BREAK     = auto()   # 🛑  leave the innermost loop
+    OP_RANGE     = auto()   # ⏩  range: from ⏩ to (end excluded)
 
     # ── Types ──
     TYPE_I32     = auto()   # 💎32
@@ -139,6 +143,10 @@ _e("🏁",    TokenKind.KW_FINISH)
 _e("📦",    TokenKind.KW_CRATE)
 _e("🆕",    TokenKind.KW_NEW)
 _e("📥",    TokenKind.KW_READ)
+_e("🔁",    TokenKind.KW_WHILE)
+_e("🏃",    TokenKind.KW_FOR)
+_e("🛑",    TokenKind.KW_BREAK)
+_e("⏩",    TokenKind.OP_RANGE)
 _e("🎯",    TokenKind.OP_ASSIGN)
 _e("🔫",    TokenKind.OP_TYPE_ANN)
 _e("⚖️",    TokenKind.OP_EQ)

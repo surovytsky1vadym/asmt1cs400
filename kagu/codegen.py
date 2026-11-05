@@ -20,6 +20,7 @@ from .nodes import (
     OverflowCheckNode, ReturnNode, CallStmtNode, IntLiteralNode,
     BoolLiteralNode, IdentifierNode, BinaryOpNode, UnaryOpNode,
     StringLiteralNode, CallNode, NewNode, ReadNode, FieldStep, ChainNode,
+    WhileNode, ForNode, BreakNode,
 )
 from .semantic import Analyzer, StructInfo, FieldInfo, VarSymbol, I32, I64, BOOL, INT_RANGE
 
@@ -44,6 +45,7 @@ class CodeGen:
         self.self_ptr = None                 # object pointer inside a member function
         self._strings: dict[str, ir.GlobalVariable] = {}
         self._overflow_fns: dict[tuple[str, int], ir.Function] = {}
+        self._loop_exits: list[ir.Block] = []   # where 🛑 jumps, innermost last
 
     # ═══════════════════════════════════════════════════════════════════════
     #  Module
@@ -205,6 +207,12 @@ class CodeGen:
             b.store(value, self._address(stmt.target))
         elif isinstance(stmt, IfNode):
             self._gen_if(stmt)
+        elif isinstance(stmt, WhileNode):
+            self._gen_while(stmt)
+        elif isinstance(stmt, ForNode):
+            self._gen_for(stmt)
+        elif isinstance(stmt, BreakNode):
+            b.branch(self._loop_exits[-1])
         elif isinstance(stmt, PrintNode):
             for item in stmt.items:
                 self._print_item(item)
@@ -238,6 +246,60 @@ class CodeGen:
         b.position_at_end(end_bb)
         if getattr(stmt, "always_returns", False):
             b.unreachable()                 # both branches returned
+
+    def _gen_while(self, stmt: WhileNode):
+        """cond → body → back edge to cond; a false condition leaves to end."""
+        b = self.builder
+        cond_bb = self.fn.append_basic_block("while.cond")
+        body_bb = self.fn.append_basic_block("while.body")
+        end_bb = self.fn.append_basic_block("while.end")
+        b.branch(cond_bb)
+
+        b.position_at_end(cond_bb)
+        b.cbranch(self._gen_expr(stmt.condition), body_bb, end_bb)
+
+        b.position_at_end(body_bb)
+        self._loop_exits.append(end_bb)
+        self._gen_block(stmt.body)
+        self._loop_exits.pop()
+        if not b.block.is_terminated:
+            b.branch(cond_bb)               # back edge
+        b.position_at_end(end_bb)
+
+    def _gen_for(self, stmt: ForNode):
+        """i = start; end evaluated once; cond: i < end; body; step: i + 1,
+        back edge to cond.  i < end, so i + 1 cannot overflow."""
+        b = self.builder
+        ty = self._ir_type(stmt.sym.ty)
+        var = self._alloca(ty, stmt.name)
+        stmt.sym.ptr = var
+        limit = self._alloca(ty, f"{stmt.name}.end")
+        b.store(self._gen_value(stmt.start, stmt.sym.ty), var)
+        b.store(self._gen_value(stmt.end, stmt.sym.ty), limit)
+
+        cond_bb = self.fn.append_basic_block("for.cond")
+        body_bb = self.fn.append_basic_block("for.body")
+        step_bb = self.fn.append_basic_block("for.step")
+        end_bb = self.fn.append_basic_block("for.end")
+        b.branch(cond_bb)
+
+        b.position_at_end(cond_bb)
+        more = b.icmp_signed("<", b.load(var, name=stmt.name), b.load(limit))
+        b.cbranch(more, body_bb, end_bb)
+
+        b.position_at_end(body_bb)
+        self._loop_exits.append(end_bb)
+        self._gen_block(stmt.body)
+        self._loop_exits.pop()
+        if not b.block.is_terminated:
+            b.branch(step_bb)
+
+        b.position_at_end(step_bb)
+        nxt = b.add(b.load(var, name=stmt.name), ir.Constant(ty, 1), name="next",
+                    flags=["nsw"])
+        b.store(nxt, var)
+        b.branch(cond_bb)                   # back edge
+        b.position_at_end(end_bb)
 
     def _gen_overflow_check(self, stmt: OverflowCheckNode):
         value = self._gen_expr(stmt.expr)

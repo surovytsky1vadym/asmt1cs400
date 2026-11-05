@@ -1,0 +1,38 @@
+// 🛑 leaves the innermost loop only; loops inside functions and members
+📦 Counter 🏟️
+  🎮 value 🔫 💎32 ⚔️
+
+  🪄 count_to(limit 🔫 💎32) ➡️ 💎32 🏟️
+    🔁 🏆 🏟️
+      🐉 value ⬆️⚖️ limit 🏟️
+        🛑 ⚔️
+      🏟️
+      value 🎯 value ➕ 1 ⚔️
+    🏟️
+    🏁 value ⚔️
+  🏟️
+🏟️
+
+🪄 first_divisor(n 🔫 💎32) ➡️ 💎32 🏟️
+  🎮 found 🔫 💎32 🎯 n ⚔️
+  🏃 d 🔫 💎32 🎯 2 ⏩ n 🏟️
+    🐉 n 🎲 d ⚖️ 0 🏟️
+      found 🎯 d ⚔️
+      🛑 ⚔️
+    🏟️
+  🏟️
+  🏁 found ⚔️
+🏟️
+
+🎮 c 🔫 Counter 🎯 🆕 Counter(0) ⚔️
+📢 c.count_to(5) ⚔️
+📢 first_divisor(91), " ", first_divisor(13) ⚔️
+
+🏃 i 🔫 💎32 🎯 0 ⏩ 3 🏟️
+  🏃 j 🔫 💎32 🎯 0 ⏩ 10 🏟️
+    🐉 j ⬆️ i 🏟️
+      🛑 ⚔️                       // ends the j loop, the i loop goes on
+    🏟️
+    📢 i, ":", j ⚔️
+  🏟️
+🏟️

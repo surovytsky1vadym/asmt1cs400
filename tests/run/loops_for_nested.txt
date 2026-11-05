@@ -1,0 +1,20 @@
+// 🏃 for over [from, to): a multiplication table, a loop inside a loop
+🏃 i 🔫 💎32 🎯 1 ⏩ 4 🏟️
+  🏃 j 🔫 💎32 🎯 1 ⏩ 4 🏟️
+    🎮 cell 🔫 💎32 🎯 i ✖️ j ⚔️   // declared in the body: fresh every pass
+    📢 i, " x ", j, " = ", cell ⚔️
+  🏟️
+🏟️
+
+// an empty range: the body does not run
+🏃 k 🔫 💎64 🎯 5 ⏩ 5 🏟️
+  📢 "never" ⚔️
+🏟️
+
+// the range end is evaluated once, before the first pass
+🎮 limit 🔫 💎32 🎯 3 ⚔️
+🏃 k 🔫 💎32 🎯 0 ⏩ limit 🏟️
+  limit 🎯 limit ➕ 10 ⚔️
+  📢 "k = ", k ⚔️
+🏟️
+📢 "limit = ", limit ⚔️

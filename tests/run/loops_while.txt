@@ -1,0 +1,21 @@
+// 🔁 while: Collatz steps for a number read from stdin
+🪄 next(n 🔫 💎64) ➡️ 💎64 🏟️
+  🐉 n 🎲 2 ⚖️ 0 🏟️
+    🏁 n ➗ 2 ⚔️
+  🏟️
+  🏁 3 ✖️ n ➕ 1 ⚔️
+🏟️
+
+🎮 n 🔫 💎64 🎯 📥() ⚔️
+🎮 steps 🔫 💎32 🎯 0 ⚔️
+🔁 n 💢 1 🏟️
+  n 🎯 next(n) ⚔️
+  steps 🎯 steps ➕ 1 ⚔️
+🏟️
+📢 "steps: ", steps ⚔️
+
+// a loop whose condition is false at once runs zero times
+🔁 💀 🏟️
+  📢 "never" ⚔️
+🏟️
+📢 "done" ⚔️
