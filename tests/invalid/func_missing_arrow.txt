@@ -1,0 +1,4 @@
+// Function without the result type arrow
+🪄 f() 💎32 🏟️
+  🏁 1 ⚔️
+🏟️

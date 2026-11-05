@@ -1,0 +1,38 @@
+Program
+  StructDecl(name=Point)
+    fields:
+      Field(name=x, type=i32, index=0, mutable=False)
+      Field(name=y, type=i32, index=1, mutable=True)
+    members:
+      MemberFunc(struct=Point, name=shift, result=i32)
+        params:
+          Param(name=dy, type=i32, mutable=False)
+        body:
+          Assign(name=y)
+            value:
+              BinaryOp(op=PLUS)
+                left:
+                  Identifier(y)
+                right:
+                  Identifier(dy)
+          Return
+            value:
+              Identifier(y)
+  VarDecl(name=p, type=Point, mutable=True)
+    value:
+      New(type=Point, args=2)
+        args:
+          Read
+          IntLiteral(2)
+  CallStmt
+    call:
+      Chain(ends_in_member_call=True)
+        base:
+          Identifier(p)
+        steps:
+          MemberCall(.shift, args=1)
+            args:
+              IntLiteral(1)
+  Print
+    expr:
+      Identifier(p)

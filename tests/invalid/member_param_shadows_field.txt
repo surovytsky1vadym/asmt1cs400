@@ -1,0 +1,17 @@
+// Inside a member function a parameter hides the field of the same name,
+// and parameters are constant
+📦 Point 🏟️
+  🏰 x 🔫 💎32 ⚔️
+  🎮 y 🔫 💎32 ⚔️
+  🪄 shift(dy 🔫 💎32) ➡️ 💎32 🏟️
+    y 🎯 y ➕ dy ⚔️
+    🏁 y ⚔️
+  🏟️
+🏟️
+📦 Cell 🏟️
+  🎮 v 🔫 💎32 ⚔️
+  🪄 set(v 🔫 💎32) ➡️ 💎32 🏟️
+    v 🎯 v ⚔️
+    🏁 v ⚔️
+  🏟️
+🏟️

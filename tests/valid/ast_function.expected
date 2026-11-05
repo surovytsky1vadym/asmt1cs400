@@ -1,0 +1,34 @@
+Program
+  FuncDecl(name=add, result=i64)
+    params:
+      Param(name=a, type=i32, mutable=False)
+      Param(name=b, type=i64, mutable=False)
+    body:
+      Return
+        value:
+          BinaryOp(op=PLUS)
+            left:
+              Identifier(a)
+            right:
+              Identifier(b)
+  FuncDecl(name=seven, result=i32)
+    params: (none)
+    body:
+      Return
+        value:
+          IntLiteral(7)
+  ConstDecl(name=total, type=i64, mutable=False)
+    value:
+      Call(name=add, args=2)
+        args:
+          Call(name=seven, args=0)
+            args: (none)
+          Call(name=add, args=2)
+            args:
+              IntLiteral(1)
+              IntLiteral(2)
+  Print
+    expr:
+      StringLiteral("total = ")
+    expr:
+      Identifier(total)

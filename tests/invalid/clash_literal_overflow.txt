@@ -1,0 +1,2 @@
+// 💥 on a literal that does not fit is reported at compile time
+💥 3000000000 🔫 💎32 ⚔️

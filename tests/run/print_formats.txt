@@ -1,0 +1,13 @@
+// End to end: every printable kind; items have no separator, one newline per 📢
+📦 Flag 🏟️
+  🏰 id 🔫 💎64 ⚔️
+  🎮 on 🔫 🛡️ ⚔️
+🏟️
+
+📢 42 ⚔️
+📢 ➖2147483648, " ", 9223372036854775807 ⚔️
+📢 🏆, " ", 💀, " ", 🚫🏆 ⚔️
+📢 "tab:\tquote:\" backslash:\\ emoji: 🎮" ⚔️
+📢 "two\nlines" ⚔️
+📢 "flag = ", 🆕 Flag(3000000000, 🏆) ⚔️
+📢 "a", "b", 1, 2 ⚔️

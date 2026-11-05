@@ -1,0 +1,21 @@
+// End to end: calls to functions declared further down, calls as arguments
+🪄 isEven(n 🔫 💎32) ➡️ 🛡️ 🏟️
+  🐉 n ⚖️ 0 🏟️
+    🏁 🏆 ⚔️
+  🏟️
+  🏁 isOdd(n ➖ 1) ⚔️
+🏟️
+
+🪄 isOdd(n 🔫 💎32) ➡️ 🛡️ 🏟️
+  🐉 n ⚖️ 0 🏟️
+    🏁 💀 ⚔️
+  🏟️
+  🏁 isEven(n ➖ 1) ⚔️
+🏟️
+
+🪄 add(a 🔫 💎32, b 🔫 💎32) ➡️ 💎32 🏟️
+  🏁 a ➕ b ⚔️
+🏟️
+
+📢 isEven(10), " ", isOdd(7), " ", isEven(3) ⚔️
+📢 add(add(1, 2), add(add(3, 4), 5)) ⚔️

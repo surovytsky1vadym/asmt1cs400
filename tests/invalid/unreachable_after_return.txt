@@ -1,0 +1,5 @@
+// A statement after 🏁 in the same block
+🪄 one() ➡️ 💎32 🏟️
+  🏁 1 ⚔️
+  📢 2 ⚔️
+🏟️
