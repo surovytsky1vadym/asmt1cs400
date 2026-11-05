@@ -427,13 +427,14 @@ Build it into a native binary (`llc` from LLVM, then `clang` to link):
 
 ```bash
 python3 compiler.py programs/arena.txt arena.ll
-llc -filetype=obj arena.ll -o arena.o && clang arena.o -o arena
+llc -filetype=obj -mtriple="$(clang -print-target-triple)" arena.ll -o arena.o
+clang arena.o -o arena
 ./arena < programs/arena.1.in     # session 1; compare with programs/arena.1.expected
 ./arena < programs/arena.2.in     # session 2
 ./arena < programs/arena.3.in     # session 3
 ```
 
-`run_tests.sh` builds the program and checks every `programs/NAME.K.in` against `programs/NAME.K.expected`.
+`-mtriple` makes `llc` produce code for the machine clang links for (the module carries the triple of the Python that ran the compiler, which on a Mac with an x86_64 Python under Rosetta is not the arm64 of clang). Tested with Homebrew LLVM's `llc` and Apple clang 17. `run_tests.sh` builds the program and checks every `programs/NAME.K.in` against `programs/NAME.K.expected`.
 
 ---
 
