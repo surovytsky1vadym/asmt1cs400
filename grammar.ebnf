@@ -46,6 +46,9 @@ statement      = varDecl
                | constDecl
                | identStatement
                | ifStmt
+               | whileStmt
+               | forStmt
+               | breakStmt
                | printStmt
                | overflowCheck
                | returnStmt ;
@@ -89,6 +92,21 @@ ifStmt         = "🐉" , expr , "🏟️" , stmtBlock , "🏟️"
                , [ "👻" , "🏟️" , stmtBlock , "🏟️" ] ;
 
 stmtBlock      = statement , { statement } ;
+
+(* While loop (Stage 3): 🔁 boolExpr 🏟️ stmt+ 🏟️
+   - 🔁  keyword "repeat" (while): the condition is checked before every pass *)
+whileStmt      = "🔁" , expr , "🏟️" , stmtBlock , "🏟️" ;
+
+(* For loop over an integer range (Stage 3):
+   🏃 i 🔫 💎32 🎯 from ⏩ to 🏟️ stmt+ 🏟️
+   - 🏃  keyword "run" (for)
+   - i   loop variable, a constant inside the body, takes from, from+1, …, to−1
+   - ⏩  range operator; "to" is excluded and evaluated once, before the loop *)
+forStmt        = "🏃" , identifier , "🔫" , typeName , "🎯" , expr , "⏩" , expr
+               , "🏟️" , stmtBlock , "🏟️" ;
+
+(* Break (Stage 3): 🛑 ⚔️ — leave the innermost loop; only inside a loop     *)
+breakStmt      = "🛑" , "⚔️" ;
 
 (* Print statement: 📢 "x = ", x ⚔️
    - 📢  keyword "shout" (print)
@@ -194,5 +212,7 @@ letter         = "a" | "b" | ... | "z" | "A" | "B" | ... | "Z" | "_" ;
 (*  🚫  logical NOT              🪄  spell (function)                       *)
 (*  ➡️  result type arrow        🏁  finish (return)                        *)
 (*  📦  crate (structure)        🆕  new object                             *)
-(*  📥  read integer                                                        *)
+(*  📥  read integer             🔁  repeat (while)                         *)
+(*  🏃  run (for)                ⏩  range (from ⏩ to, end excluded)        *)
+(*  🛑  break                                                               *)
 (* ═══════════════════════════════════════════════════════════════════════════ *)
