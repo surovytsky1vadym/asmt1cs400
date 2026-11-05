@@ -5,7 +5,7 @@ This project was developed with the assistance of an AI coding assistant
 (Google Gemini / Antigravity IDE, Claude model), acting as a pair-programmer 
 under my direct supervision and instruction.
 
-What I did (My Contributions):
+What I did:
 -------------------------------
 - Designed the core language concept (gaming-themed emoji language "KaguLang").
 - Enforced strict compliance with all assignment requirements (e.g., ensuring the 
@@ -25,10 +25,6 @@ What I used AI for:
 - Generating the `.expected` test dump files programmatically.
 - Formatting the `README.md` documentation.
 
-Chat transcript:
------------------
-The full conversation is available as the Antigravity IDE conversation log.
-Conversation ID: 30d3104e-36d0-4a37-83cb-29d9509e1a09
 
 What was taken as-is vs. modified:
 -----------------------------------
@@ -45,3 +41,8 @@ Summary:
 While AI was used as a typing assistant and sounding board, the language design, 
 architectural decisions, quality assurance, bug identification, and strict 
 adherence to the grading criteria were driven entirely by me.
+
+Chat transcript:
+-----------------
+The full conversation is available as the Antigravity IDE conversation log.
+Conversation ID: 30d3104e-36d0-4a37-83cb-29d9509e1a09
