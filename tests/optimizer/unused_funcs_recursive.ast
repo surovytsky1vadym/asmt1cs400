@@ -1,0 +1,40 @@
+Program
+  FuncDecl(name=fact, result=i64)
+    params:
+      Param(name=n, type=i64, mutable=False)
+    body:
+      If
+        condition:
+          BinaryOp(op=LTE)
+            left:
+              Identifier(n)
+            right:
+              IntLiteral(1)
+        then:
+          Return
+            value:
+              IntLiteral(1)
+      Return
+        value:
+          BinaryOp(op=MUL)
+            left:
+              Identifier(n)
+            right:
+              Call(name=fact, args=1)
+                args:
+                  BinaryOp(op=MINUS)
+                    left:
+                      Identifier(n)
+                    right:
+                      IntLiteral(1)
+  Print
+    expr:
+      Call(name=fact, args=1)
+        args:
+          IntLiteral(10)
+    expr:
+      StringLiteral(" ")
+    expr:
+      Call(name=fact, args=1)
+        args:
+          IntLiteral(5)

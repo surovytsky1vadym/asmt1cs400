@@ -1,0 +1,2 @@
+// A string literal is allowed only as an item of 📢
+🎮 x 🔫 💎32 🎯 "seven" ⚔️

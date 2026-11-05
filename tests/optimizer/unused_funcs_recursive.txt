@@ -1,0 +1,15 @@
+// A recursive function that only calls itself is still unused, and so are
+// two functions that only call each other.  fact is called from main.
+🪄 spin(n 🔫 💎32) ➡️ 💎32 🏟️
+  🐉 n ⬇️⚖️ 0 🏟️
+    🏁 0 ⚔️
+  🏟️
+  🏁 spin(n ➖ 1) ⚔️
+🏟️
+🪄 fact(n 🔫 💎64) ➡️ 💎64 🏟️
+  🐉 n ⬇️⚖️ 1 🏟️
+    🏁 1 ⚔️
+  🏟️
+  🏁 n ✖️ fact(n ➖ 1) ⚔️
+🏟️
+📢 fact(10), " ", fact(5) ⚔️

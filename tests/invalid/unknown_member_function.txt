@@ -1,0 +1,11 @@
+// Call of a member function the structure does not have
+📦 Point 🏟️
+  🏰 x 🔫 💎32 ⚔️
+  🎮 y 🔫 💎32 ⚔️
+  🪄 shift(dy 🔫 💎32) ➡️ 💎32 🏟️
+    y 🎯 y ➕ dy ⚔️
+    🏁 y ⚔️
+  🏟️
+🏟️
+🎮 p 🔫 Point 🎯 🆕 Point(1, 2) ⚔️
+p.jump() ⚔️

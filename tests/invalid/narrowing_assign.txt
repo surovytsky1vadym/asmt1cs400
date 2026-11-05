@@ -1,0 +1,3 @@
+// An i64 value is never narrowed to i32 implicitly
+🎮 big 🔫 💎64 🎯 5 ⚔️
+🎮 small 🔫 💎32 🎯 big ⚔️

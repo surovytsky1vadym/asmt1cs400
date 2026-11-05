@@ -1,0 +1,27 @@
+=== KaguLang Arena ===
+How many waves will you fight? (1 to 5)
+--- Wave 1: a monster with 10 hp and 2 attack ---
+Your hp: 40/40, potions: 2, monster hp: 10
+Your move? 1 = attack, 2 = potion, 3 = run
+No potions left!
+The monster hits you for 3
+Your hp: 37/40, potions: 1, monster hp: 10
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 6
+The monster hits you for 2
+Your hp: 35/40, potions: 1, monster hp: 4
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 8
+The monster falls! +10 gold
+--- Wave 2: a monster with 16 hp and 3 attack ---
+Your hp: 35/40, potions: 1, monster hp: 16
+Your move? 1 = attack, 2 = potion, 3 = run
+You hesitate...
+The monster hits you for 5
+Your hp: 30/40, potions: 1, monster hp: 16
+Your move? 1 = attack, 2 = potion, 3 = run
+You run away from the arena!
+=== Result ===
+Waves cleared: 1 of 3
+Gold: 10, hp left: 30
+Better luck next time.

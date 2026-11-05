@@ -1,0 +1,10 @@
+// square is called once: its body moves to the call site, the parameter
+// becomes a constant, the 🏁 value becomes the constant that replaces the
+// call.  The caller's own 'x' and 'r' do not collide with the renamed ones.
+🪄 square(x 🔫 💎32) ➡️ 💎32 🏟️
+  🎮 r 🔫 💎32 🎯 x ✖️ x ⚔️
+  🏁 r ⚔️
+🏟️
+🎮 x 🔫 💎32 🎯 📥() ⚔️
+🎮 r 🔫 💎32 🎯 square(x ➕ 1) ➕ 1 ⚔️
+📢 "x = ", x, ", r = ", r ⚔️

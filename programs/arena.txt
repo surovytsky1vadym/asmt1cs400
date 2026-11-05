@@ -1,0 +1,153 @@
+// ═══════════════════════════════════════════════════════════════════════
+//  KaguLang Arena — a turn-based battle against waves of monsters.
+//  The player picks how many waves to fight, then for every turn chooses:
+//  1 = attack, 2 = drink a potion, 3 = run away.
+//  🏃 walks over the waves, 🔁 runs the turns of one fight, 🛑 ends a
+//  fight early (a monster falls, or the hero runs or falls).
+// ═══════════════════════════════════════════════════════════════════════
+
+📦 Hero 🏟️
+  🎮 hp 🔫 💎32 ⚔️
+  🏰 max_hp 🔫 💎32 ⚔️
+  🎮 potions 🔫 💎32 ⚔️
+  🎮 gold 🔫 💎32 ⚔️
+
+  🪄 alive() ➡️ 🛡️ 🏟️
+    🏁 hp ⬆️ 0 ⚔️
+  🏟️
+
+  🪄 hurt(damage 🔫 💎32) ➡️ 💎32 🏟️
+    hp 🎯 hp ➖ damage ⚔️
+    🐉 hp ⬇️ 0 🏟️
+      hp 🎯 0 ⚔️
+    🏟️
+    🏁 hp ⚔️
+  🏟️
+
+  // A potion heals 15 hp, never above max_hp.  Returns the hp healed.
+  🪄 drink() ➡️ 💎32 🏟️
+    🐉 potions ⚖️ 0 🏟️
+      🏁 0 ⚔️
+    🏟️
+    potions 🎯 potions ➖ 1 ⚔️
+    🎮 healed 🔫 💎32 🎯 15 ⚔️
+    🐉 hp ➕ healed ⬆️ max_hp 🏟️
+      healed 🎯 max_hp ➖ hp ⚔️
+    🏟️
+    hp 🎯 hp ➕ healed ⚔️
+    🏁 healed ⚔️
+  🏟️
+🏟️
+
+📦 Monster 🏟️
+  🎮 hp 🔫 💎32 ⚔️
+  🏰 attack 🔫 💎32 ⚔️
+  🏰 reward 🔫 💎32 ⚔️
+
+  🪄 alive() ➡️ 🛡️ 🏟️
+    🏁 hp ⬆️ 0 ⚔️
+  🏟️
+
+  🪄 hurt(damage 🔫 💎32) ➡️ 💎32 🏟️
+    hp 🎯 hp ➖ damage ⚔️
+    🐉 hp ⬇️ 0 🏟️
+      hp 🎯 0 ⚔️
+    🏟️
+    🏁 hp ⚔️
+  🏟️
+🏟️
+
+// Every wave brings a stronger monster.
+🪄 spawn_monster(wave 🔫 💎32) ➡️ Monster 🏟️
+  🎮 hp 🔫 💎32 🎯 10 ⚔️
+  🎮 attack 🔫 💎32 🎯 2 ⚔️
+  🏃 w 🔫 💎32 🎯 1 ⏩ wave 🏟️
+    hp 🎯 hp ➕ 6 ⚔️
+    attack 🎯 attack ➕ 1 ⚔️
+  🏟️
+  🏁 🆕 Monster(hp, attack, wave ✖️ 10) ⚔️
+🏟️
+
+// A small linear congruential generator: the same moves give the same game.
+🪄 next_roll(seed 🔫 💎32) ➡️ 💎32 🏟️
+  🏁 (seed ✖️ 75 ➕ 74) 🎲 65537 ⚔️
+🏟️
+
+📢 "=== KaguLang Arena ===" ⚔️
+📢 "How many waves will you fight? (1 to 5)" ⚔️
+🎮 waves 🔫 💎32 🎯 📥() ⚔️
+🐉 waves ⬇️ 1 🏟️
+  waves 🎯 1 ⚔️
+🏟️
+🐉 waves ⬆️ 5 🏟️
+  waves 🎯 5 ⚔️
+🏟️
+
+🎮 hero 🔫 Hero 🎯 🆕 Hero(40, 40, 2, 0) ⚔️
+🎮 seed 🔫 💎32 🎯 2026 ⚔️
+🎮 cleared 🔫 💎32 🎯 0 ⚔️
+🎮 fled 🔫 🛡️ 🎯 💀 ⚔️
+
+🏃 wave 🔫 💎32 🎯 1 ⏩ waves ➕ 1 🏟️
+  🎮 m 🔫 Monster 🎯 spawn_monster(wave) ⚔️
+  📢 "--- Wave ", wave, ": a monster with ", m.hp, " hp and ", m.attack, " attack ---" ⚔️
+
+  🔁 🏆 🏟️
+    📢 "Your hp: ", hero.hp, "/", hero.max_hp, ", potions: ", hero.potions,
+       ", monster hp: ", m.hp ⚔️
+    📢 "Your move? 1 = attack, 2 = potion, 3 = run" ⚔️
+    🎮 move 🔫 💎32 🎯 📥() ⚔️
+
+    🐉 move ⚖️ 3 🏟️
+      📢 "You run away from the arena!" ⚔️
+      fled 🎯 🏆 ⚔️
+      🛑 ⚔️
+    🏟️
+    🐉 move ⚖️ 1 🏟️
+      seed 🎯 next_roll(seed) ⚔️
+      🏰 hit 🔫 💎32 🎯 5 ➕ seed 🎲 4 ⚔️
+      m.hurt(hit) ⚔️
+      📢 "You hit the monster for ", hit ⚔️
+    🏟️ 👻 🏟️
+      🐉 move ⚖️ 2 🏟️
+        🏰 healed 🔫 💎32 🎯 hero.drink() ⚔️
+        🐉 healed ⚖️ 0 🏟️
+          📢 "No potions left!" ⚔️
+        🏟️ 👻 🏟️
+          📢 "You drink a potion and heal ", healed, " hp" ⚔️
+        🏟️
+      🏟️ 👻 🏟️
+        📢 "You hesitate..." ⚔️
+      🏟️
+    🏟️
+
+    🐉 🚫 m.alive() 🏟️
+      hero.gold 🎯 hero.gold ➕ m.reward ⚔️
+      cleared 🎯 cleared ➕ 1 ⚔️
+      📢 "The monster falls! +", m.reward, " gold" ⚔️
+      🛑 ⚔️
+    🏟️
+
+    seed 🎯 next_roll(seed) ⚔️
+    🏰 bite 🔫 💎32 🎯 m.attack ➕ seed 🎲 3 ⚔️
+    hero.hurt(bite) ⚔️
+    📢 "The monster hits you for ", bite ⚔️
+    🐉 🚫 hero.alive() 🏟️
+      📢 "You fall in wave ", wave, "..." ⚔️
+      🛑 ⚔️
+    🏟️
+  🏟️
+
+  🐉 fled 👾 🚫 hero.alive() 🏟️
+    🛑 ⚔️
+  🏟️
+🏟️
+
+📢 "=== Result ===" ⚔️
+📢 "Waves cleared: ", cleared, " of ", waves ⚔️
+📢 "Gold: ", hero.gold, ", hp left: ", hero.hp ⚔️
+🐉 cleared ⚖️ waves 🏟️
+  📢 "Champion of the arena!" ⚔️
+🏟️ 👻 🏟️
+  📢 "Better luck next time." ⚔️
+🏟️

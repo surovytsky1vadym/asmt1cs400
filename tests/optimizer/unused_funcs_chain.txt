@@ -1,0 +1,19 @@
+// top calls middle, middle calls bottom, nobody calls top: removing top
+// leaves middle unused, removing middle leaves bottom unused.
+// used is called once, so it is inlined; helper is called twice and stays.
+🪄 bottom(n 🔫 💎32) ➡️ 💎32 🏟️
+  🏁 n ➕ 1 ⚔️
+🏟️
+🪄 middle(n 🔫 💎32) ➡️ 💎32 🏟️
+  🏁 bottom(n) ✖️ 2 ⚔️
+🏟️
+🪄 top(n 🔫 💎32) ➡️ 💎32 🏟️
+  🏁 middle(n) ➕ middle(n) ⚔️
+🏟️
+🪄 helper(n 🔫 💎32) ➡️ 💎32 🏟️
+  🏁 n ✖️ n ⚔️
+🏟️
+🪄 used(n 🔫 💎32) ➡️ 💎32 🏟️
+  🏁 helper(n) ➕ helper(n ➕ 1) ⚔️
+🏟️
+📢 used(3) ⚔️

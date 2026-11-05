@@ -1,0 +1,14 @@
+// Assignment through a chain whose middle step is a constant field
+📦 Point 🏟️
+  🏰 x 🔫 💎32 ⚔️
+  🎮 y 🔫 💎32 ⚔️
+  🪄 shift(dy 🔫 💎32) ➡️ 💎32 🏟️
+    y 🎯 y ➕ dy ⚔️
+    🏁 y ⚔️
+  🏟️
+🏟️
+📦 Circle 🏟️
+  🏰 center 🔫 Point ⚔️
+🏟️
+🎮 c 🔫 Circle 🎯 🆕 Circle(🆕 Point(1, 2)) ⚔️
+c.center.y 🎯 5 ⚔️

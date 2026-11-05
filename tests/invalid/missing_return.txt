@@ -1,0 +1,6 @@
+// A path through the function ends without 🏁
+🪄 sign(n 🔫 💎32) ➡️ 💎32 🏟️
+  🐉 n ⬆️ 0 🏟️
+    🏁 1 ⚔️
+  🏟️
+🏟️

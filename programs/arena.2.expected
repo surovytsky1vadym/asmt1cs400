@@ -1,0 +1,59 @@
+=== KaguLang Arena ===
+How many waves will you fight? (1 to 5)
+--- Wave 1: a monster with 10 hp and 2 attack ---
+Your hp: 40/40, potions: 2, monster hp: 10
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 7
+The monster hits you for 3
+Your hp: 37/40, potions: 2, monster hp: 3
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 5
+The monster falls! +10 gold
+--- Wave 2: a monster with 16 hp and 3 attack ---
+Your hp: 37/40, potions: 2, monster hp: 16
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 8
+The monster hits you for 5
+Your hp: 32/40, potions: 2, monster hp: 8
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 7
+The monster hits you for 4
+Your hp: 28/40, potions: 2, monster hp: 1
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 6
+The monster falls! +20 gold
+--- Wave 3: a monster with 22 hp and 4 attack ---
+Your hp: 28/40, potions: 2, monster hp: 22
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 8
+The monster hits you for 5
+Your hp: 23/40, potions: 2, monster hp: 14
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 7
+The monster hits you for 4
+Your hp: 19/40, potions: 2, monster hp: 7
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 5
+The monster hits you for 4
+Your hp: 15/40, potions: 2, monster hp: 2
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 8
+The monster falls! +30 gold
+--- Wave 4: a monster with 28 hp and 5 attack ---
+Your hp: 15/40, potions: 2, monster hp: 28
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 8
+The monster hits you for 5
+Your hp: 10/40, potions: 2, monster hp: 20
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 6
+The monster hits you for 6
+Your hp: 4/40, potions: 2, monster hp: 14
+Your move? 1 = attack, 2 = potion, 3 = run
+You hit the monster for 5
+The monster hits you for 5
+You fall in wave 4...
+=== Result ===
+Waves cleared: 3 of 5
+Gold: 60, hp left: 0
+Better luck next time.

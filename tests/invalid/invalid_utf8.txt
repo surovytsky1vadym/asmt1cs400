@@ -1,0 +1,2 @@
+// Invalid UTF-8 byte inside an identifier position
+🎮 x � 🔫 💎32 🎯 1 ⚔️

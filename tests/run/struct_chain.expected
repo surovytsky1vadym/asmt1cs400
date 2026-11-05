@@ -1,0 +1,4 @@
+Circle(center: Point(x: 1, y: 2), r: 5, visible: true)
+11 2 5
+Point(x: 11, y: 2)
+Circle(center: Point(x: 11, y: 2), r: 5, visible: false)

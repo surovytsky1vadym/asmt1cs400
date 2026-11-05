@@ -1,0 +1,11 @@
+// A mutating member function called on a constant object
+📦 Point 🏟️
+  🏰 x 🔫 💎32 ⚔️
+  🎮 y 🔫 💎32 ⚔️
+  🪄 shift(dy 🔫 💎32) ➡️ 💎32 🏟️
+    y 🎯 y ➕ dy ⚔️
+    🏁 y ⚔️
+  🏟️
+🏟️
+🏰 p 🔫 Point 🎯 🆕 Point(1, 2) ⚔️
+p.shift(1) ⚔️

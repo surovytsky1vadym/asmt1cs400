@@ -1,0 +1,15 @@
+// End to end: each if/else block is a new scope; an inner declaration
+// may shadow an outer one, and the outer one is visible again afterwards
+🎮 x 🔫 💎32 🎯 1 ⚔️
+🐉 x ⚖️ 1 🏟️
+  🎮 x 🔫 💎32 🎯 2 ⚔️
+  📢 "inner ", x ⚔️
+  🐉 🏆 🏟️
+    🏰 x 🔫 🛡️ 🎯 💀 ⚔️
+    📢 "innermost ", x ⚔️
+  🏟️
+🏟️ 👻 🏟️
+  📢 "never" ⚔️
+🏟️
+x 🎯 x ➕ 10 ⚔️
+📢 "outer ", x ⚔️

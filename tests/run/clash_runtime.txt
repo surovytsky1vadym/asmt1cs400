@@ -1,0 +1,7 @@
+// End to end: 💥 checks at run time that a value fits in a type
+🎮 big 🔫 💎64 🎯 2147483647 ⚔️
+💥 big 🔫 💎32 ⚔️
+📢 "ok" ⚔️
+big 🎯 big ➕ 1 ⚔️
+💥 big 🔫 💎32 ⚔️
+📢 "not reached" ⚔️

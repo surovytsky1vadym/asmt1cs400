@@ -1,0 +1,58 @@
+Program
+  FuncDecl(name=noisy, result=i32)
+    params:
+      Param(name=n, type=i32, mutable=False)
+    body:
+      Print
+        expr:
+          StringLiteral("noisy ")
+        expr:
+          Identifier(n)
+      Return
+        value:
+          Identifier(n)
+  VarDecl(name=v, type=i32, mutable=True)
+    value:
+      IntLiteral(10)
+  If
+    condition:
+      BinaryOp(op=GT)
+        left:
+          Identifier(v)
+        right:
+          IntLiteral(0)
+    then:
+      Print
+        expr:
+          StringLiteral("inside")
+  CallStmt
+    call:
+      Call(name=noisy, args=1)
+        args:
+          IntLiteral(1)
+  CallStmt
+    call:
+      Read
+  VarDecl(name=c, type=i32, mutable=True)
+    value:
+      BinaryOp(op=PLUS)
+        left:
+          Call(name=noisy, args=1)
+            args:
+              IntLiteral(2)
+        right:
+          IntLiteral(1)
+  For(var=i, type=i32)
+    from:
+      IntLiteral(0)
+    to:
+      IntLiteral(2)
+    body:
+      Print
+        expr:
+          StringLiteral("i ")
+        expr:
+          Identifier(i)
+  Print
+    expr:
+      Identifier(v)

@@ -1,0 +1,36 @@
+// End to end: member functions that read and assign fields, call each other,
+// and call a member function on a field
+📦 Counter 🏟️
+  🏰 step 🔫 💎32 ⚔️
+  🎮 value 🔫 💎32 ⚔️
+
+  🪄 tick() ➡️ 💎32 🏟️
+    value 🎯 value ➕ step ⚔️
+    🏁 value ⚔️
+  🏟️
+
+  🪄 tickTwice() ➡️ 💎32 🏟️
+    tick() ⚔️
+    🏁 tick() ⚔️
+  🏟️
+
+  🪄 peek() ➡️ 💎32 🏟️
+    🏁 value ⚔️
+  🏟️
+🏟️
+
+📦 Clock 🏟️
+  🎮 seconds 🔫 Counter ⚔️
+  🪄 advance() ➡️ 💎32 🏟️
+    🏁 seconds.tickTwice() ⚔️
+  🏟️
+🏟️
+
+🎮 k 🔫 Clock 🎯 🆕 Clock(🆕 Counter(5, 0)) ⚔️
+k.advance() ⚔️
+📢 k.advance() ⚔️
+📢 k.seconds.tick() ⚔️
+📢 k ⚔️
+
+🏰 frozen 🔫 Counter 🎯 🆕 Counter(1, 42) ⚔️
+📢 frozen.peek() ⚔️
